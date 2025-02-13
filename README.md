@@ -1,2 +1,0 @@
-# bic-frontend
-Tech0のSTEP4で作ったビックカメラにPOC提案するアプリのフロントエンド
