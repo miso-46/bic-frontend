@@ -21,7 +21,7 @@ export default function Home() {
         <header className="flex items-center mb-2">
           <div className="mr-2">
             <Image
-              src="/image/biccamera-logo.jpg"
+              src="/images/biccamera-logo.jpg"
               alt="ビックカメラロゴ"
               width={50}
               height={50}

@@ -4,6 +4,7 @@ import type React from "react";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function LoginPage() {
   const [id, setId] = useState("");
@@ -30,9 +31,14 @@ export default function LoginPage() {
     <div className="login-card">
       <div className="header">
         <div className="logo">
-          <div className="logo-circle">
-            <span className="logo-text">B</span>
-          </div>
+          <Image
+            src="/images/biccamera-logo.jpg"
+            alt="ビックカメラロゴ"
+            width={48}
+            height={48}
+            className="logo-image"
+            priority
+          />
         </div>
         <div>
           <h1 className="title">ビックカメラAI販売支援システム</h1>
