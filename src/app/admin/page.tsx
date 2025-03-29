@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
-
+  const storeName = "天神1号店"; // ← ここで店舗名を変数として定義
   const handleLogout = () => {
     // ここに実際のログアウト処理を追加することができます
     // 例: Cookieの削除やセッションの終了など
@@ -23,8 +23,8 @@ export default function Home() {
             <Image
               src="/images/biccamera-logo.jpg"
               alt="ビックカメラロゴ"
-              width={50}
-              height={50}
+              width={100}
+              height={100}
               className="rounded-full"
             />
           </div>
@@ -33,12 +33,12 @@ export default function Home() {
 
         <div className="text-sm mb-4">管理者メニュー＞メニュー一覧</div>
 
-        <div className="border-t border-gray-200 pt-4 mb-6">
-          <h2 className="text-lg mb-4">店舗：天神1号店</h2>
+        <div className="bg-white border border-gray-300  p-4 mb-4 w-full text-center">
+          <h2 className="text-lg font-semibold">店舗：{storeName}</h2>
         </div>
 
         <div className="flex flex-col">
-          <Link href="/store-settings">
+          <Link href="/">
             <button className="w-full py-3 border border-gray-300 hover:bg-gray-50 transition-colors">
               店頭画面設定
             </button>

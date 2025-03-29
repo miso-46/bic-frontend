@@ -24,7 +24,7 @@ export default function LoginPage() {
 
   const handleReturnToStore = () => {
     // 店頭画面に戻る処理をここに実装
-    console.log("店頭画面に戻る");
+    router.push("/");
   };
 
   return (
@@ -34,8 +34,8 @@ export default function LoginPage() {
           <Image
             src="/images/biccamera-logo.jpg"
             alt="ビックカメラロゴ"
-            width={48}
-            height={48}
+            width={150}
+            height={50}
             className="logo-image"
             priority
           />

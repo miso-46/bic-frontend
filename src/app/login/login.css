@@ -4,11 +4,11 @@
   padding: 0;
 }
 
-.container {
+.login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /*justify-content: center;*/
   min-height: 100vh;
   padding: 1rem;
   width: 100%;
@@ -17,7 +17,7 @@
 .login-card,
 .admin-page {
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
   padding: 1rem;
 }
 
@@ -25,13 +25,13 @@
   display: flex;
   align-items: center;
   margin-bottom: 2rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .logo {
-  width: 3rem;
-  height: 3rem;
-  margin-right: 0.75rem;
+  width: 100px;
+  height: 50px;
+  margin-right: 1rem;
   position: relative;
   flex-shrink: 0;
 }
@@ -181,7 +181,7 @@ body {
     width: 100%;
   }
 }
-:root {
+/*:root {
   --background: 0 0% 100%;
   --foreground: 0 0% 0%;
-}
+}*/

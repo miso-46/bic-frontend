@@ -15,9 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      {/* Tailwindのクラスは body 側に適用して CSS Modules の影響を避ける */}
-      <body>
-        <div className="container">{children}</div>
+      {/* Hydration mismatch を防ぐため、bodyに直接Tailwindクラスを指定 */}
+      <body className="antialiased">
+        {/* Tailwindの.containerと競合しないようにクラス名を変更 */}
+        <div className="login-container">{children}</div>
       </body>
     </html>
   );
