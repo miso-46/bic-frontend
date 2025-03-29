@@ -40,7 +40,7 @@ export default function Home() {
         <div className="flex flex-col">
           <Link href="/">
             <button className="w-full py-3 border border-gray-300 hover:bg-gray-50 transition-colors">
-              店頭画面設定
+              店頭画面
             </button>
           </Link>
 
