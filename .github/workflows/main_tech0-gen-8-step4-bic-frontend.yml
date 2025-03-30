@@ -28,9 +28,15 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
+      - name: Copy artifact for deployment job
+        run: |
+          mkdir deploy
+          cp -r ./.next/standalone/. ./deploy
+          cp -r ./public ./deploy
+          cp -r ./.next/static/. ./deploy/.next/static
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: zip release.zip ./deploy -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -60,5 +66,5 @@ jobs:
         with:
           app-name: 'tech0-gen-8-step4-bic-frontend'
           slot-name: 'Production'
-          package: .
+          package: ./deploy
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F75AA4AD1ED4446B9E6F918965F8293F }}
