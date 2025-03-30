@@ -33,6 +33,7 @@ jobs:
         run: |
           mkdir -p deploy/.next/static
           cp -r .next/standalone/* deploy/
+          cp .next/standalone/server.js deploy/
           cp -r .next/static/* deploy/.next/static/
           cp .next/BUILD_ID deploy/.next/
           if [ -d public ]; then cp -r public deploy/; fi
