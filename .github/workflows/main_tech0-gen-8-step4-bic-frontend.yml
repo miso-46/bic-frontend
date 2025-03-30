@@ -31,9 +31,9 @@ jobs:
 
       - name: Prepare deployment folder
         run: |
-          mkdir -p deploy
+          mkdir -p deploy/.next/static
           cp -r .next/standalone/* deploy/
-          cp -r .next/static deploy/.next/static
+          cp -r .next/static/* deploy/.next/static/
           if [ -d public ]; then cp -r public deploy/; fi
           if [ -f server.js ]; then cp server.js deploy/; fi
 
