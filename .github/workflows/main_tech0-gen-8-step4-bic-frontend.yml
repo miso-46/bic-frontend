@@ -29,17 +29,15 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
-      - name: Prepare deployment folder
+      - name: Prepare deployment package
         run: |
           mkdir -p deploy/.next/static
           cp -r .next/standalone/* deploy/
           cp -r .next/static/* deploy/.next/static/
           cp .next/BUILD_ID deploy/.next/
-          cp .next/routes-manifest.json deploy/.next/
-          cp .next/prerender-manifest.json deploy/.next/ || true
-          cp .next/middleware-manifest.json deploy/.next/ || true
-          cp .next/server/app-render-config.json deploy/.next/server/ || true
-          if [ -d public ]; then cp -r public deploy/; fi
+          cp -r public deploy/ || echo "No public folder"
+          cp -r .next/server deploy/.next/ || echo "No .next/server"
+          cp -r .next/*.json deploy/.next/ || echo "No top-level jsons"
 
       - name: Zip artifact for deployment
         run: zip -r release.zip ./deploy
