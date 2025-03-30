@@ -34,8 +34,8 @@ jobs:
           mkdir -p deploy/.next/static
           cp -r .next/standalone/* deploy/
           cp -r .next/static/* deploy/.next/static/
+          cp .next/BUILD_ID deploy/.next/
           if [ -d public ]; then cp -r public deploy/; fi
-          if [ -f server.js ]; then cp server.js deploy/; fi
 
       - name: Zip artifact for deployment
         run: zip -r release.zip ./deploy
