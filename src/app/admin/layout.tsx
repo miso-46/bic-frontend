@@ -1,23 +1,12 @@
+// src/app/admin/layout.tsx
+
 import type React from "react";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./admin.css";
+import "./admin.css"; // 管理画面用CSSの読み込み
 
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "ビックカメラAI販売支援システム",
-  description: "販売支援システム管理画面",
-};
-
-export default function RootLayout({
+export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="ja">
-      <body className={inter.className}>{children}</body>
-    </html>
-  );
+  return <div className="admin-wrapper">{children}</div>;
 }
