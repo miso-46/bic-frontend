@@ -94,7 +94,7 @@ export default function Home() {
 
   const handleGoButtonClick = () => {
     if (selectedAppliance) {
-      router.push("/question/user");
+      router.push("/chat/1000");
     }
   };
 
