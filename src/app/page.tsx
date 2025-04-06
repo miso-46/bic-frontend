@@ -12,6 +12,7 @@ export default function Home() {
   const [selectedAppliance, setSelectedAppliance] = useState<string>("");
   const [message, setMessage] = useState("どげんしたと〜？");
   const [videoError, setVideoError] = useState(false);
+  const [talking, setTalking] = useState(false); // アニメーション用
 
   const appliances = ["ロボット掃除機", "ドライヤー", "テレビ"];
   const bic_girl = "bic-girl.png";
@@ -42,21 +43,39 @@ export default function Home() {
     });
   }, []);
 
-  // メッセージを順番に変更する
+  // メッセージを順番に変更して音声を再生
   useEffect(() => {
     const messages = [
-      "どげんしたと〜？",
-      "おススメの家電を一緒に検討しましょう！",
-      "あなたにぴったりの家電を見つけますよ！",
-      "家電選びで困っとーと？",
+      { text: "どげんしたと〜？", audio: "/sounds/dogen.mp3" },
+      {
+        text: "おススメの家電を一緒に検討しましょう！",
+        audio: "/sounds/osusume.mp3",
+      },
+      {
+        text: "あなたにぴったりの家電を見つけますよ！",
+        audio: "/sounds/pittari.mp3",
+      },
+      { text: "家電選びで困っとーと？", audio: "/sounds/komattoto.mp3" },
     ];
 
     let currentIndex = 0;
 
     const intervalId = setInterval(() => {
+      const current = messages[currentIndex];
+      setMessage(current.text);
+
+      // 音声再生
+      const audio = new Audio(current.audio);
+      audio.play().catch((err) => {
+        console.log("音声の再生に失敗しました:", err);
+      });
+
+      // キャラクターがしゃべってる風アニメーション
+      setTalking(true);
+      setTimeout(() => setTalking(false), 1500);
+
       currentIndex = (currentIndex + 1) % messages.length;
-      setMessage(messages[currentIndex]);
-    }, 7000); // 7秒ごとにメッセージを変更
+    }, 7000);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -75,13 +94,11 @@ export default function Home() {
 
   const handleGoButtonClick = () => {
     if (selectedAppliance) {
-      // 選択された家電をクエリパラメータとして結果ページに遷移
       router.push("/question/user");
     }
   };
 
   const handleAdminButtonClick = () => {
-    // 管理者ログインページに遷移
     router.push("/login");
   };
 
@@ -100,12 +117,16 @@ export default function Home() {
               <img
                 src={bic_girl}
                 alt="キャラクター"
-                className="w-[300px] h-[500px] object-contain"
+                className={`w-[300px] h-[500px] object-contain ${
+                  talking ? "talking" : ""
+                }`}
               />
             ) : (
               <video
                 ref={videoRef}
-                className="w-[300px] h-[500px] object-contain"
+                className={`w-[300px] h-[500px] object-contain ${
+                  talking ? "talking" : ""
+                }`}
                 muted
                 loop
                 playsInline
@@ -174,7 +195,7 @@ export default function Home() {
         </div>
       </main>
 
-      {/* フッター部分 - GOボタンと管理者メニューを同じ高さに配置 */}
+      {/* フッター部分 */}
       <footer className="flex justify-between items-center p-4 mt-4">
         <button
           className="border border-pink-500 text-pink-500 rounded-full px-6 py-2"
