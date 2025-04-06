@@ -11,6 +11,7 @@ const luckiestGuy = Luckiest_Guy({ weight: '400', subsets: ['latin'] });
 
 // 環境変数の読み取り（
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+console.log('apiUrl:', apiUrl);
 
 type Choice = {
     label: string;
