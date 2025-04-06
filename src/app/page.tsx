@@ -15,7 +15,7 @@ export default function Home() {
   const [talking, setTalking] = useState(false); // アニメーション用
 
   const appliances = ["ロボット掃除機", "ドライヤー", "テレビ"];
-  const bic_girl = "bic-girl.png";
+  const bic_girl = "/images/girl.png";
 
   // 動画の読み込みエラー処理
   useEffect(() => {
