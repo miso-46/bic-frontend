@@ -109,7 +109,7 @@ export default function ChatPage() {
       <div className="flex gap-8 mt-6">
         {/* 左側キャラクター */}
         <div>
-          <img src="/girl.png" alt="案内キャラクター" width={200} />
+          <img src="/images/girl.png" alt="案内キャラクター" width={200} />
           <div className="bg-[#FFBEBE] p-4 mt-2 rounded-md font-bold text-black">
             あなたにおススメの<br />
             【ロボット掃除機】<br />
