@@ -9,6 +9,9 @@ import { Luckiest_Guy } from 'next/font/google';
 
 const luckiestGuy = Luckiest_Guy({ weight: '400', subsets: ['latin'] });
 
+// 環境変数の読み取り（
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 type Choice = {
     label: string;
     value: string;
@@ -39,7 +42,7 @@ export default function ChatPage() {
 
     useEffect(() => {
         const fetchQuestions = async () => {
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/question/${categoryId}`);
+            const res = await axios.get(`${apiUrl}/question/${categoryId}`);
             setQuestions(res.data);
         };
         fetchQuestions();
@@ -79,7 +82,7 @@ export default function ChatPage() {
             category_id: Number(categoryId),
         };
 
-        const userRes = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user_info`, userInfo);
+        const userRes = await axios.post(`${apiUrl}/user_info`, userInfo);
         const receptionId = userRes.data.reception_id;
 
         const answerPayload = {
@@ -90,7 +93,7 @@ export default function ChatPage() {
             })),
         };
 
-        await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/answers`, answerPayload);
+        await axios.post(`${apiUrl}/answers`, answerPayload);
         router.push('/priority');
         } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response?.data?.detail) {
