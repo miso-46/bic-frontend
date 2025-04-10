@@ -95,7 +95,7 @@ export default function ChatPage() {
         };
 
         await axios.post(`${apiUrl}/answers`, answerPayload);
-        router.push('/priority');
+        router.push(`/priority/${receptionId}`);
         } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response?.data?.detail) {
             setErrorMessage(error.response.data.detail);
