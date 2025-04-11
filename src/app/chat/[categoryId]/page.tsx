@@ -19,17 +19,17 @@ type Choice = {
 };
 
 type Question = {
-    id: number;
     question_text: string;
-    answer_type: string;
-    choices: Choice[];
+    options: { label: string; value: number }[]; 
 };
+
+type AnswerMap = { [questionId: string]: number };
 
 export default function ChatPage() {
     const { categoryId } = useParams();
     console.log('categoryId:', categoryId);
-    const [questions, setQuestions] = useState<Question[]>([]);
-    const [answers, setAnswers] = useState<{ [key: number]: string | number | boolean }>({});
+    const [questions, setQuestions] = useState<{ [id: string]: Question }>({});
+    const [answers, setAnswers] = useState<{ [key: string]: number }>({});
     const [age, setAge] = useState<number | null>(null);
     const [gender, setGender] = useState('');
     const [household, setHousehold] = useState('');
@@ -39,7 +39,13 @@ export default function ChatPage() {
     const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const allAnswered = gender && age !== null && household && questions.length > 0 && questions.every(q => answers[q.id] !== undefined);
+    const allAnswered =
+    gender &&
+    age !== null &&
+    household &&
+    Object.keys(questions).length > 0 &&
+    Object.keys(questions).every(id => answers[id] !== undefined);
+
 
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -61,15 +67,16 @@ export default function ChatPage() {
         }
     }, [currentStep]);
 
-    const handleChoice = (questionId: number, value: string | number | boolean) => {
+    const handleChoice = (questionId: string, value: number) => {
         setAnswers(prev => ({ ...prev, [questionId]: value }));
-        const stepIndex = questions.findIndex(q => q.id === questionId) + 4;
+        const stepIndex = Object.keys(questions).indexOf(String(questionId)) + 4;
         if (currentStep === stepIndex) {
-        setTimeout(() => {
-            setCurrentStep(stepIndex + 1);
-        }, 800); // add delay before next question
+            setTimeout(() => {
+                setCurrentStep(stepIndex + 1);
+            }, 800);
         }
     };
+    
 
     const handleSubmit = async () => {
         setErrorMessage('');
@@ -87,23 +94,43 @@ export default function ChatPage() {
         const receptionId = userRes.data.reception_id;
 
         const answerPayload = {
-            receptionId,
+            receptionId: receptionId,
             answers: Object.entries(answers).map(([questionId, value]) => ({
-            questionId: Number(questionId),
-            value,
+                questionId: Number(questionId),
+                answer: Number(value), // value を数値に変換
             })),
         };
 
         await axios.post(`${apiUrl}/answers`, answerPayload);
         router.push(`/priority/${receptionId}`);
         } catch (error: unknown) {
-        if (axios.isAxiosError(error) && error.response?.data?.detail) {
-            setErrorMessage(error.response.data.detail);
-        } else {
-            setErrorMessage('送信中に予期しないエラーが発生しました。');
-        }
-        } finally {
-        setIsSubmitting(false);
+            if (axios.isAxiosError(error) && error.response?.data?.detail) {
+                const detail = error.response.data.detail;
+        
+                // 安全に文字列を抽出
+                let message = '送信中にエラーが発生しました。';
+        
+                if (Array.isArray(detail)) {
+                    // Pydanticのバリデーションエラー配列
+                    if (detail.length > 0 && typeof detail[0] === 'object' && 'msg' in detail[0]) {
+                        message = detail[0].msg;
+                    } else {
+                        message = JSON.stringify(detail); // fallback表示
+                    }
+                } else if (typeof detail === 'object' && detail !== null) {
+                    if ('msg' in detail) {
+                        message = detail.msg;
+                    } else {
+                        message = JSON.stringify(detail); // fallback表示
+                    }
+                } else if (typeof detail === 'string') {
+                    message = detail;
+                }
+        
+                setErrorMessage(message);
+            } else {
+                setErrorMessage('送信中に予期しないエラーが発生しました。');
+            }
         }
     };
 
@@ -200,29 +227,33 @@ export default function ChatPage() {
                 </div>
             )}
 
-            {questions.map((q, index) => {
+            {Object.entries(questions).map(([id, q], index) => {
                 const stepIndex = index + 4;
+
                 return (
-                currentStep >= stepIndex && (
-                    <div key={q.id} className="mb-4">
-                    <div className="bg-[#FFBEBE] px-2 py-1 inline-block rounded font-bold text-black">{q.question_text}</div>
-                    <div className="mt-2 flex gap-4 flex-wrap">
-                        {q.choices.map(choice => (
-                        <button
-                            key={choice.value}
-                            onClick={() => {
-                            handleChoice(q.id, choice.value);
-                            }}
-                            className={`px-4 py-2 border rounded shadow bg-white text-black ${answers[q.id] == choice.value ? 'bg-gray-200' : ''} hover:bg-gray-100`}
-                        >
-                            {choice.label}
-                        </button>
+                    currentStep >= stepIndex && (
+                    <div key={id} className="mb-4">
+                        <div className="bg-[#FFBEBE] px-2 py-1 inline-block rounded font-bold text-black">
+                        {q.question_text}
+                        </div>
+                        <div className="mt-2 flex gap-4 flex-wrap">
+                        {q.options.map((option: { label: string; value: number }) => (
+                            <button
+                            key={option.value}
+                            onClick={() => handleChoice(id, option.value)}
+                            className={`px-4 py-2 border rounded shadow bg-white text-black ${
+                                answers[id] == option.value ? 'bg-gray-200' : ''
+                            } hover:bg-gray-100`}
+                            >
+                            {option.label}
+                            </button>
                         ))}
+                        </div>
                     </div>
-                    </div>
-                )
+                    )
                 );
             })}
+
             </div>
         </div>
         <div className="mt-6 flex flex-col items-center w-full">
