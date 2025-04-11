@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import { ProductCard, ProductData } from './ProductCard'
-import { useParams, useRouter } from 'next/navigation';
-import axios from 'axios';
+import { useParams } from 'next/navigation';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 

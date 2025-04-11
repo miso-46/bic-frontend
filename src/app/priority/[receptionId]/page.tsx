@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useParams, useRouter } from 'next/navigation';
 import styles from "./priority.module.css";
 import axios from 'axios';
