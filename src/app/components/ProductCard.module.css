@@ -1,0 +1,29 @@
+.card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 500px;
+    margin: auto;
+    background-color: #fff;
+  }
+
+  .image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .price {
+    font-weight: bold;
+    color: red;
+  }
+
+  .description {
+    margin-top: 10px;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
