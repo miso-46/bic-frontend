@@ -114,13 +114,14 @@ export default function Home() {
 
           <div className="relative flex justify-center">
             {videoError ? (
-              <img
+              <Image
                 src={bic_girl}
                 alt="キャラクター"
-                className={`w-[300px] h-[500px] object-contain ${
-                  talking ? "talking" : ""
-                }`}
+                width={300}
+                height={500}
+                className={`object-contain ${talking ? "talking" : ""}`}
               />
+
             ) : (
               <video
                 ref={videoRef}

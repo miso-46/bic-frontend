@@ -8,9 +8,14 @@ import { useParams } from 'next/navigation';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
+type ScoreItem = {
+  metricsId: number
+  score: number
+}
+
 export const ProductSwiper = () => {
   const [products, setProducts] = useState<ProductData[]>([])
-  const [scores, setScores] = useState<Record<number, number>>({})
+  // const [scores, setScores] = useState<Record<number, number>>({})
   const { receptionId } = useParams();
   useEffect(() => {
     const fetchProducts = async () => {
@@ -18,7 +23,7 @@ export const ProductSwiper = () => {
         const res1 = await fetch(`${apiUrl}/priority/${receptionId}`)
         const scoreList = await res1.json()
   
-        const scores = scoreList.reduce((acc: Record<number, number>, cur: any) => {
+        const scores = scoreList.reduce((acc: Record<number, number>, cur: ScoreItem) => {
           acc[cur.metricsId] = cur.score
           return acc
         }, {})
@@ -28,8 +33,8 @@ export const ProductSwiper = () => {
           scores,
         }
   
-        console.log("payload:", payload)
-        setScores(scores)
+        // console.log("payload:", payload)
+        // setScores(scores)
   
         const res2 = await fetch(`${apiUrl}/recommend/confirm`, {
           method: 'POST',
