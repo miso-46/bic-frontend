@@ -1,4 +1,3 @@
-import { RadarChart } from './RadarChart'
 import styles from './ProductCard.module.css'
 
 export type ProductData = {
