@@ -28,10 +28,8 @@ type Priority = {
 export default function PriorityPage() {
   const router = useRouter();
   const { receptionId } = useParams();
-  const [answers, setAnswers] = useState<Answer[]>([]);
+  // const [answers, setAnswers] = useState<Answer[]>([]);
   const [priorities, setPriorities] = useState<Priority[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchAndSend = async () => {

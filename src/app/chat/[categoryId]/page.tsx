@@ -6,6 +6,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { FaSpinner } from 'react-icons/fa';
 import { Luckiest_Guy } from 'next/font/google';
+import Image from 'next/image';
 
 const luckiestGuy = Luckiest_Guy({ weight: '400', subsets: ['latin'] });
 
@@ -13,17 +14,10 @@ const luckiestGuy = Luckiest_Guy({ weight: '400', subsets: ['latin'] });
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 console.log('apiUrl:', apiUrl);
 
-type Choice = {
-    label: string;
-    value: string;
-};
-
 type Question = {
     question_text: string;
     options: { label: string; value: number }[]; 
 };
-
-type AnswerMap = { [questionId: string]: number };
 
 export default function ChatPage() {
     const { categoryId } = useParams();
@@ -140,7 +134,13 @@ export default function ChatPage() {
         <div className="flex gap-8 mt-6">
             {/* 左側キャラクター */}
             <div>
-            <img src="/images/girl.png" alt="案内キャラクター" width={200} />
+            <Image
+            src="/images/girl.png"
+            alt="案内キャラクター"
+            width={200}
+            height={200} // 高さは適宜調整
+            priority
+            />
             <div className="bg-[#FFBEBE] p-4 mt-2 rounded-md font-bold text-black">
                 あなたにおススメの<br />
                 【ロボット掃除機】<br />
