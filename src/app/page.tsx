@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
+
 export default function Home() {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);

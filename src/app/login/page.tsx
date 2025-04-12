@@ -31,7 +31,10 @@ export default function LoginPage() {
 
       const data = response.data;
 
-      // localStorageに保存
+      // ログイン情報は認証成功時にsessionStorageに保存
+      sessionStorage.setItem("isLoggedIn", "true"); 
+
+      // 店舗情報はlocalStorageに保存
       localStorage.setItem("store_id", data.store_id.toString());
       localStorage.setItem("store_name", data.name);
       localStorage.setItem("store_prefecture", data.prefecture);

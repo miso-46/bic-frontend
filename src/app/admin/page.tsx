@@ -10,11 +10,9 @@ export default function AdminPage() {
 
   // 不正アクセス防止（未ログイン状態で/adminにアクセスしたら/loginにリダイレクト）
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storeId = localStorage.getItem("store_id");
-      if (!storeId) {
-        router.push("/login");
-      }
+    const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+    if (!isLoggedIn) {
+      router.push("/login");
     }
   }, []);
 
@@ -54,11 +52,15 @@ export default function AdminPage() {
         </div>
 
         <div className="flex flex-col">
-          <Link href="/">
-            <button className="w-full py-3 border border-gray-300 hover:bg-gray-50 transition-colors">
-              店頭画面
-            </button>
-          </Link>
+          <button
+            onClick={() => {
+              sessionStorage.removeItem("isLoggedIn");
+              router.push("/");
+            }}
+            className="w-full py-3 border border-gray-300 hover:bg-gray-50 transition-colors"
+          >
+            店頭画面
+          </button>
 
           <div className="h-3"></div>
 
