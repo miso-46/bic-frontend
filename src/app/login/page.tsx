@@ -1,25 +1,56 @@
 "use client";
 
 import type React from "react";
+import axios from "axios";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+console.log('apiUrl:', apiUrl);
+
 export default function LoginPage() {
-  const [id, setId] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 実際のアプリケーションでは、ここで認証処理を行います
-    // 例: APIを呼び出して認証する
-    console.log("ログイン処理:", id, password);
+    if (!name.trim() || !password.trim()) {
+      alert("店舗名とパスワードを入力してください。");
+      return;
+    }
 
-    // 認証成功後、admin画面に遷移
-    router.push("/admin");
+    try {
+      const response = await axios.post(`${apiUrl}/login`, {
+        name: name,
+        password: password,
+      });
+
+      const data = response.data;
+
+      // localStorageに保存
+      localStorage.setItem("store_id", data.store_id.toString());
+      localStorage.setItem("store_name", data.name);
+      localStorage.setItem("store_prefecture", data.prefecture);
+
+      // 認証成功後、admin画面に遷移
+      router.push("/admin");
+    } catch (error: any) {
+      console.error("ログインエラー:", error);
+
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          alert("店舗名またはパスワードが間違っています。");
+        } else {
+          alert("ログイン中にエラーが発生しました。");
+        }
+      } else {
+        alert("予期しないエラーが発生しました。");
+      }
+    }
   };
 
   const handleReturnToStore = () => {
@@ -49,24 +80,22 @@ export default function LoginPage() {
       <form onSubmit={handleLogin} className="form">
         <div className="input-group">
           <label>
-            ID:
+            店舗名:
             <input
               type="text"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-              placeholder="#####"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </label>
         </div>
 
         <div className="input-group">
           <label>
-            PASSWORD:
+            パスワード:
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="#####"
             />
           </label>
         </div>
