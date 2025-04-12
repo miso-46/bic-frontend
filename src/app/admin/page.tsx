@@ -2,16 +2,32 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Home() {
+export default function AdminPage() {
   const router = useRouter();
-  const storeName = "天神1号店"; // ← ここで店舗名を変数として定義
-  const handleLogout = () => {
-    // ここに実際のログアウト処理を追加することができます
-    // 例: Cookieの削除やセッションの終了など
 
-    // ログアウト後、ログイン画面にリダイレクト
+  // 不正アクセス防止（未ログイン状態で/adminにアクセスしたら/loginにリダイレクト）
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storeId = localStorage.getItem("store_id");
+      if (!storeId) {
+        router.push("/login");
+      }
+    }
+  }, []);
+
+  const [name, setName] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("store_name") || "";
+    }
+    return "";
+  });
+  const handleLogout = () => {
+    localStorage.removeItem("store_id");
+    localStorage.removeItem("store_name");
+    localStorage.removeItem("store_prefecture");
     router.push("/login");
   };
 
@@ -33,8 +49,8 @@ export default function Home() {
 
         <div className="text-sm mb-4">管理者メニュー＞メニュー一覧</div>
 
-        <div className="bg-white border border-gray-300  p-4 mb-4 w-full text-center">
-          <h2 className="text-lg font-semibold">店舗：{storeName}</h2>
+        <div className="bg-white  p-4 mb-4 w-full text-center">
+          <h2 className="text-lg font-semibold">店舗：{name}</h2>
         </div>
 
         <div className="flex flex-col">
