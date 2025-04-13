@@ -1,29 +1,45 @@
 .card {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 500px;
-    margin: auto;
-    background-color: #fff;
-  }
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 4px;
+  /* 他の共通スタイルがあればここに */
+}
 
-  .image {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-  }
+.columns {
+  display: flex;           /* flexで並べる */
+  flex-direction: row;     /* 横並び */
+  justify-content: space-between; 
+  align-items: flex-start; 
+  gap: 20px;               /* カラム間の隙間 */
+}
 
-  .price {
-    font-weight: bold;
-    color: red;
-  }
+.productInfo {
+  flex: 1;                 /* 余白を伸ばして見た目を調整 */
+  /* あるいは width: 50%; などでもOK */
+}
 
-  .description {
-    margin-top: 10px;
-  }
+.chartContainer {
+  flex: 1;
+  /* レーダーチャートを中央寄せで見せたいなら */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
+.price {
+  color: #d00; /* 価格を強調表示したい場合など */
+}
+
+.description {
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.actions {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.actions button {
+  margin: 4px;
+}
