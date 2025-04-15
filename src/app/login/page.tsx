@@ -44,6 +44,9 @@ export default function LoginPage() {
       // 初回ログイン時、BlobをIndexedDBに保存
       const db = await openDB("bicAppDB", 1, {
         upgrade(db) {
+          if (db.objectStoreNames.contains("media")) {
+            db.deleteObjectStore("media");
+          }
           db.createObjectStore("media");
         },
       });
@@ -60,7 +63,7 @@ export default function LoginPage() {
       };
 
       await fetchAndStoreBlob("image", character.image);
-      await fetchAndStoreBlob("movie", character.movie);
+      await fetchAndStoreBlob("video", character.video);
       await fetchAndStoreBlob("voice_1", character.voice_1);
       await fetchAndStoreBlob("voice_2", character.voice_2);
       await db.put("media", character.message_1 || "", "voice_1_message");
