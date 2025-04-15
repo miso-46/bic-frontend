@@ -54,9 +54,10 @@ export default function Home() {
         const blob = await db.get("media", "video");
   
         let src: string;
-        if (blob) {
+        if (blob instanceof Blob && blob.size > 0) {
           src = URL.createObjectURL(blob);
           setVideoSrc(src);
+          setFallbackVideo(false);
         } else {
           src = "/images/bic-girl.mp4";
           setVideoSrc(src);
