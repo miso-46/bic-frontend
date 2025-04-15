@@ -26,9 +26,19 @@ export default function Home() {
   const [talking, setTalking] = useState(false); // アニメーション用
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [fallbackVideo, setFallbackVideo] = useState(false);
+  const [girlName, setGirlName] = useState<string | null>(null);
 
   const appliances = ["ロボット掃除機", "ドライヤー", "テレビ"];
   const bic_girl = "/images/girl.png";
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedName = localStorage.getItem("girl_name");
+      if (storedName) {
+        setGirlName(storedName);
+      }
+    }
+  }, []);
 
   // 動画の読み込みエラー処理
   useEffect(() => {
@@ -205,8 +215,8 @@ export default function Home() {
               />
             )}
           </div>
-          {typeof window !== "undefined" && localStorage.getItem("girl_name") && (
-            <p className="text-xl text-center mt-2">{localStorage.getItem("girl_name")}</p>
+          {girlName && (
+            <p className="text-xl text-center mt-2">{girlName}</p>
           )}
         </div>
 
