@@ -70,6 +70,7 @@ export default function Home() {
             video.muted = true;
             video.play().catch((err) => {
               console.warn("動画の再生に失敗しました:", err);
+              setVideoError(true);
             });
           }
         }, 100); // 反映のタイミングを待つ
@@ -77,6 +78,7 @@ export default function Home() {
         console.error("動画の取得に失敗しました", error);
         setVideoSrc("/images/bic-girl.mp4");
         setFallbackVideo(true);
+        setVideoError(true);
       }
     };
     loadVideo();
@@ -90,7 +92,7 @@ export default function Home() {
     ];
 
     let currentIndex = 0;
-    let audio = new Audio();
+    const audio = new Audio();
 
     const playNext = async () => {
       const current = messages[currentIndex];
@@ -108,7 +110,7 @@ export default function Home() {
         }
 
         await audio.play();
-      } catch (err) {
+      } catch (err: unknown) {
         console.error("音声再生エラー:", err);
       }
 
@@ -160,7 +162,15 @@ export default function Home() {
           </div>
 
           <div className="relative flex justify-center">
-            {videoSrc ? (
+            {videoError ? (
+              <Image
+                src={bic_girl}
+                alt="キャラクター"
+                width={300}
+                height={500}
+                className={`object-contain ${talking ? "talking" : ""}`}
+              />
+            ) : videoSrc ? (
               fallbackVideo ? (
                 <video
                   ref={videoRef}
@@ -194,6 +204,9 @@ export default function Home() {
               />
             )}
           </div>
+          {typeof window !== "undefined" && localStorage.getItem("girl_name") && (
+            <p className="text-xl text-center mt-2">{localStorage.getItem("girl_name")}</p>
+          )}
         </div>
 
         {/* 右側の診断部分 */}
