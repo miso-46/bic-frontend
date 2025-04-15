@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { FaSpinner } from 'react-icons/fa';
 import { Luckiest_Guy } from 'next/font/google';
 import Image from 'next/image';
+import { openDB } from 'idb';
 
 const luckiestGuy = Luckiest_Guy({ weight: '400', subsets: ['latin'] });
 
@@ -32,6 +33,7 @@ export default function ChatPage() {
     const router = useRouter();
     const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [characterImage, setCharacterImage] = useState<string | null>(null);
 
     const allAnswered =
     gender &&
@@ -48,6 +50,22 @@ export default function ChatPage() {
         };
         fetchQuestions();
     }, [categoryId]);
+
+    useEffect(() => {
+        const loadCharacterImage = async () => {
+            try {
+                const db = await openDB('bicAppDB', 1);
+                const blob = await db.get('media', 'image');
+                if (blob) {
+                    const url = URL.createObjectURL(blob);
+                    setCharacterImage(url);
+                }
+            } catch (e) {
+                console.error('Failed to load character image from IndexedDB:', e);
+            }
+        };
+        loadCharacterImage();
+    }, []);
 
     useEffect(() => {
         setTimeout(() => {
@@ -135,7 +153,7 @@ export default function ChatPage() {
             {/* 左側キャラクター */}
             <div>
             <Image
-            src="/images/girl.png"
+            src={characterImage || "/images/girl.png"}
             alt="案内キャラクター"
             width={200}
             height={200} // 高さは適宜調整
