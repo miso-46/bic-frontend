@@ -4,16 +4,28 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
+import { openDB } from "idb";
 
+const getMediaDB = async () => {
+  return await openDB("bicAppDB", 1, {
+    upgrade(db) {
+      if (!db.objectStoreNames.contains("media")) {
+        db.createObjectStore("media");
+      }
+    },
+  });
+};
 
 export default function Home() {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedAppliance, setSelectedAppliance] = useState<string>("");
-  const [message, setMessage] = useState("どげんしたと〜？");
+  const [message, setMessage] = useState("");
   const [videoError, setVideoError] = useState(false);
   const [talking, setTalking] = useState(false); // アニメーション用
+  const [videoSrc, setVideoSrc] = useState<string | null>(null);
+  const [fallbackVideo, setFallbackVideo] = useState(false);
 
   const appliances = ["ロボット掃除機", "ドライヤー", "テレビ"];
   const bic_girl = "/images/girl.png";
@@ -36,49 +48,83 @@ export default function Home() {
 
   // 動画の自動再生
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    video.play().catch((err) => {
-      console.log("自動再生できませんでした:", err);
-    });
+    const loadVideo = async () => {
+      try {
+        const db = await getMediaDB();
+        const blob = await db.get("media", "video");
+  
+        let src: string;
+        if (blob) {
+          src = URL.createObjectURL(blob);
+          setVideoSrc(src);
+        } else {
+          src = "/images/bic-girl.mp4";
+          setVideoSrc(src);
+          setFallbackVideo(true);
+        }
+  
+        // 再生処理（videoRefに一度反映された後）
+        setTimeout(() => {
+          const video = videoRef.current;
+          if (video) {
+            video.muted = true;
+            video.play().catch((err) => {
+              console.warn("動画の再生に失敗しました:", err);
+            });
+          }
+        }, 100); // 反映のタイミングを待つ
+      } catch (error) {
+        console.error("動画の取得に失敗しました", error);
+        setVideoSrc("/images/bic-girl.mp4");
+        setFallbackVideo(true);
+      }
+    };
+    loadVideo();
   }, []);
 
   // メッセージを順番に変更して音声を再生
   useEffect(() => {
     const messages = [
-      { text: "どげんしたと〜？", audio: "/sounds/dogen.mp3" },
-      {
-        text: "おススメの家電を一緒に検討しましょう！",
-        audio: "/sounds/osusume.mp3",
-      },
-      {
-        text: "あなたにぴったりの家電を見つけますよ！",
-        audio: "/sounds/pittari.mp3",
-      },
-      { text: "家電選びで困っとーと？", audio: "/sounds/komattoto.mp3" },
+      { key: "voice_1", fallbackAudio: "/sounds/osusume.mp3", fallbackText: "おススメの家電を一緒に検討しましょう！", messageKey: "voice_1_message" },
+      { key: "voice_2", fallbackAudio: "/sounds/pittari.mp3", fallbackText: "あなたにぴったりの家電を見つけますよ！", messageKey: "voice_2_message" },
     ];
 
     let currentIndex = 0;
+    let audio = new Audio();
 
-    const intervalId = setInterval(() => {
+    const playNext = async () => {
       const current = messages[currentIndex];
-      setMessage(current.text);
+      try {
+        const db = await getMediaDB();
+        const blob = await db.get("media", current.key);
 
-      // 音声再生
-      const audio = new Audio(current.audio);
-      audio.play().catch((err) => {
-        console.log("音声の再生に失敗しました:", err);
-      });
+        if (blob) {
+          audio.src = URL.createObjectURL(blob);
+          const text = await db.get("media", current.messageKey);
+          setMessage(typeof text === "string" ? text : current.fallbackText);
+        } else {
+          audio.src = current.fallbackAudio;
+          setMessage(current.fallbackText);
+        }
 
-      // キャラクターがしゃべってる風アニメーション
+        await audio.play();
+      } catch (err) {
+        console.error("音声再生エラー:", err);
+      }
+
       setTalking(true);
       setTimeout(() => setTalking(false), 1500);
 
       currentIndex = (currentIndex + 1) % messages.length;
-    }, 7000);
+    };
 
-    return () => clearInterval(intervalId);
+    playNext();
+    const intervalId = setInterval(playNext, 5000); // 音声再生の間隔
+
+    return () => {
+      clearInterval(intervalId);
+      audio.pause();
+    };
   }, []);
 
   // 家電が選択されたときのメッセージ変更
@@ -114,7 +160,31 @@ export default function Home() {
           </div>
 
           <div className="relative flex justify-center">
-            {videoError ? (
+            {videoSrc ? (
+              fallbackVideo ? (
+                <video
+                  ref={videoRef}
+                  className={`w-[300px] h-[500px] object-contain ${talking ? "talking" : ""}`}
+                  muted
+                  loop
+                  playsInline
+                  controls={false}
+                >
+                  <source src={videoSrc} type="video/mp4" />
+                  お使いのブラウザは動画再生に対応していません。
+                </video>
+              ) : (
+                <video
+                  ref={videoRef}
+                  src={videoSrc}
+                  className={`w-[300px] h-[500px] object-contain ${talking ? "talking" : ""}`}
+                  muted
+                  loop
+                  playsInline
+                  controls={false}
+                />
+              )
+            ) : (
               <Image
                 src={bic_girl}
                 alt="キャラクター"
@@ -122,22 +192,6 @@ export default function Home() {
                 height={500}
                 className={`object-contain ${talking ? "talking" : ""}`}
               />
-
-            ) : (
-              <video
-                ref={videoRef}
-                className={`w-[300px] h-[500px] object-contain ${
-                  talking ? "talking" : ""
-                }`}
-                muted
-                loop
-                playsInline
-                controls={false}
-              >
-                <source src="/images/bic-girl.mov" type="video/quicktime" />
-                <source src="/images/bic-girl.mp4" type="video/mp4" />
-                お使いのブラウザは動画再生に対応していません。
-              </video>
             )}
           </div>
         </div>

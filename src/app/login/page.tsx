@@ -2,8 +2,8 @@
 
 import type React from "react";
 import axios from "axios";
-
-import { useState } from "react";
+import { openDB } from "idb";
+import { useState , useEffect} from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -32,12 +32,38 @@ export default function LoginPage() {
       const data = response.data;
 
       // ログイン情報は認証成功時にsessionStorageに保存
-      sessionStorage.setItem("isLoggedIn", "true"); 
+      sessionStorage.setItem("isLoggedIn", "true");
 
       // 店舗情報はlocalStorageに保存
       localStorage.setItem("store_id", data.store_id.toString());
-      localStorage.setItem("store_name", data.name);
+      localStorage.setItem("store_name", data.store_name);
       localStorage.setItem("store_prefecture", data.prefecture);
+
+      // 初回ログイン時、BlobをIndexedDBに保存
+      const character = data.character;
+      const db = await openDB("bicAppDB", 1, {
+        upgrade(db) {
+          db.createObjectStore("media");
+        },
+      });
+
+      const fetchAndStoreBlob = async (key: string, url: string) => {
+        if (!url) return;
+        try {
+          const res = await fetch(url);
+          const blob = await res.blob();
+          await db.put("media", blob, key);
+        } catch (err) {
+          console.error(`${key} の取得に失敗しました`, err);
+        }
+      };
+
+      await fetchAndStoreBlob("image", character.image);
+      await fetchAndStoreBlob("movie", character.movie);
+      await fetchAndStoreBlob("voice_1", character.voice_1);
+      await fetchAndStoreBlob("voice_2", character.voice_2);
+      await db.put("media", character.message_1 || "", "voice_1_message");
+      await db.put("media", character.message_2 || "", "voice_2_message");
 
       // 認証成功後、admin画面に遷移
       router.push("/admin");
