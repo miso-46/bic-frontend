@@ -3,7 +3,7 @@
 import type React from "react";
 import axios from "axios";
 import { openDB } from "idb";
-import { useState , useEffect} from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -30,6 +30,7 @@ export default function LoginPage() {
       });
 
       const data = response.data;
+      const character = data.character;
 
       // ログイン情報は認証成功時にsessionStorageに保存
       sessionStorage.setItem("isLoggedIn", "true");
@@ -38,9 +39,9 @@ export default function LoginPage() {
       localStorage.setItem("store_id", data.store_id.toString());
       localStorage.setItem("store_name", data.store_name);
       localStorage.setItem("store_prefecture", data.prefecture);
+      localStorage.setItem("girl_name", character.name);
 
       // 初回ログイン時、BlobをIndexedDBに保存
-      const character = data.character;
       const db = await openDB("bicAppDB", 1, {
         upgrade(db) {
           db.createObjectStore("media");
