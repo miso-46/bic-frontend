@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
@@ -14,14 +14,8 @@ export default function AdminPage() {
     if (!isLoggedIn) {
       router.push("/login");
     }
-  }, []);
+  }, [router]);
 
-  const [name, setName] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("store_name") || "";
-    }
-    return "";
-  });
   const handleLogout = () => {
     localStorage.removeItem("store_id");
     localStorage.removeItem("store_name");
@@ -48,7 +42,7 @@ export default function AdminPage() {
         <div className="text-sm mb-4">管理者メニュー＞メニュー一覧</div>
 
         <div className="bg-white  p-4 mb-4 w-full text-center">
-          <h2 className="text-lg font-semibold">店舗：{name}</h2>
+          <h2 className="text-lg font-semibold">店舗：{typeof window !== "undefined" ? localStorage.getItem("store_name") : ""}</h2>
         </div>
 
         <div className="flex flex-col">

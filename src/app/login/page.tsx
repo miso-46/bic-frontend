@@ -68,9 +68,7 @@ export default function LoginPage() {
 
       // 認証成功後、admin画面に遷移
       router.push("/admin");
-    } catch (error: any) {
-      console.error("ログインエラー:", error);
-
+    } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401) {
           alert("店舗名またはパスワードが間違っています。");
