@@ -65,7 +65,7 @@ export const ProductSwiper = () => {
   }, [receptionId])
 
   return (
-    <Swiper spaceBetween={50} slidesPerView={1}>
+    <Swiper spaceBetween={20} slidesPerView={1.2} centeredSlides={true}>
       {products.map((product, index) => (
         <SwiperSlide key={index}>
           <ProductCard key={product.id} product={product} scores={scores} metricIdToName={metricIdToName}  />

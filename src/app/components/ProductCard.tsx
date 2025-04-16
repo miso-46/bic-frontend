@@ -48,13 +48,6 @@ export const ProductCard = ({
         <p className={styles.description}>{product.description}</p>
       </div>
     </div>
-
-    {/* ボタンなどのアクション要素は下にまとめて配置 */}
-    <div className={styles.actions}>
-      <button>トップに戻る</button>
-      <button>再入力</button>
-      <button>店員を呼ぶ</button>
-    </div>
   </div>
 )
 
