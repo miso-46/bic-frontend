@@ -92,8 +92,8 @@ export default function AdminPage() {
                   sessionStorage.removeItem("isLoggedIn");
                   router.push("/");
                 }
-              } catch (err: any) {
-                alert(err?.response?.data?.detail || "タブレット登録に失敗しました");
+              } catch {
+                alert("タブレット登録に失敗しました");
               } finally {
                 setIsSubmitting(false);
               }

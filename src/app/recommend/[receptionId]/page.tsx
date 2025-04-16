@@ -35,7 +35,7 @@ export default function Home() {
         uuid,
         frontend_url,
       })
-    } catch (err) {
+    } catch {
       alert('店員呼出しに失敗しました')
       setIsCallingSales(false)
     }
