@@ -2,15 +2,17 @@
 
 import { ProductSwiper } from '../../components/ProductSwiper'
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import axios from 'axios'
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 console.log('apiUrl:', apiUrl);
 
-export default function Home({ params }: { params: { receptionId: string } }) {
+export default function Home() {
+  const params = useParams();
+  const receptionId = parseInt(params.receptionId as string, 10);
   const [showCallButton, setShowCallButton] = useState(false)
-  const [isCallingStaff, setIsCallingStaff] = useState(false)
+  const [isCallingSales, setIsCallingSales] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -22,22 +24,27 @@ export default function Home({ params }: { params: { receptionId: string } }) {
     }
   }, [])
 
-  const handleCallStaff = async () => {
+  const handleCallSales = async () => {
     try {
-      setIsCallingStaff(true)
-      await axios.post(`${apiUrl}/call_staff`, {
-        reception_id: params.receptionId
+      setIsCallingSales(true)
+      const uuid = localStorage.getItem('tablet_uuid')
+      const frontend_url = window.location.href
+
+      await axios.post(`${apiUrl}/call_sales`, {
+        reception_id: receptionId,
+        uuid,
+        frontend_url,
       })
     } catch (err) {
       alert('店員呼出しに失敗しました')
-      setIsCallingStaff(false)
+      setIsCallingSales(false)
     }
   }
 
   return (
     <main>
       <h1 style={{ textAlign: 'center', margin: '20px' }}>おすすめ商品レビュー</h1>
-      {isCallingStaff && (
+      {isCallingSales && (
         <h2 style={{ textAlign: 'center', color: 'red' }}>
           店員呼出し中です。お待ちください・・・
         </h2>
@@ -47,7 +54,7 @@ export default function Home({ params }: { params: { receptionId: string } }) {
         <button onClick={() => router.push('/')}>トップに戻る</button>
         <button >再入力</button>
         {showCallButton && (
-          <button onClick={handleCallStaff}>店員を呼ぶ</button>
+          <button onClick={handleCallSales}>店員を呼ぶ</button>
         )}
       </div>
     </main>
