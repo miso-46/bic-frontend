@@ -25,10 +25,5 @@ export const ProductCard = ({ product }: { product: ProductData }) => (
         サイズ: 幅 {product.dimensions.width}mm × 奥行 {product.dimensions.depth}mm × 高さ {product.dimensions.height}mm
       </p>
       <p className={styles.description}>{product.description}</p>
-      <div className={styles.actions}>
-        <button>トップに戻る</button>
-        <button>再入力</button>
-        <button>店員を呼ぶ</button>
-      </div>
     </div>
   ) 
