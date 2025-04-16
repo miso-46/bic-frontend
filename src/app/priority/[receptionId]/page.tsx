@@ -133,7 +133,7 @@ export default function PriorityPage() {
             ) : (
               priorities.map((item, idx) => (
                 <li key={idx}>
-                  第{idx + 1}位：{item.name}（スコア：{item.score.toFixed(2)}）
+                  第{idx + 1}位：{item.name}
                 </li>
               ))
             )}
