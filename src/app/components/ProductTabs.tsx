@@ -5,7 +5,7 @@ import { PriorityCard } from './PriorityCard'
 
 export default function ProductTabs() {
   return (
-    <div className="w-full max-w-5xl mx-auto">
+    <><div className="w-full max-w-5xl mx-auto">
       <Tab.Group>
         <Tab.List className="flex w-full p-1 space-x-1 bg-red-900/20 rounded-xl">
             <Tab
@@ -44,5 +44,16 @@ export default function ProductTabs() {
         </Tab.Panels>
       </Tab.Group>
     </div>
+    <div className="flex justify-center gap-4 my-4">
+      <button className="px-4 py-2 rounded-full border border-red-500 text-red-500 hover:bg-red-50 transition-colors">
+        トップに戻る
+      </button>
+      <button className="px-4 py-2 rounded-full border border-black text-black hover:bg-gray-100 transition-colors">
+        再入力
+      </button>
+      <button className="px-4 py-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors">
+        店員を呼ぶ
+      </button>
+    </div></>
   )
 }
