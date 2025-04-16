@@ -1,6 +1,6 @@
 'use client'
 
-import { ProductSwiper } from '../../components/ProductSwiper'
+import  ProductTabs  from '../../components/ProductTabs'
 import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import axios from 'axios'
@@ -49,12 +49,12 @@ export default function Home() {
           店員呼出し中です。お待ちください・・・
         </h2>
       )}
-      <ProductSwiper />
-      <div>
-        <button onClick={() => router.push('/')}>トップに戻る</button>
-        <button >再入力</button>
+      <ProductTabs />
+      <div className="flex justify-center gap-4 my-4">
+        <button className="px-4 py-2 rounded-full border border-red-500 text-red-500 hover:bg-red-50 transition-colors" onClick={() => router.push('/')}>トップに戻る</button>
+        <button className="px-4 py-2 rounded-full border border-black text-black hover:bg-gray-100 transition-colors">再入力</button>
         {showCallButton && (
-          <button onClick={handleCallSales}>店員を呼ぶ</button>
+          <button className="px-4 py-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors" onClick={handleCallSales}>店員を呼ぶ</button>
         )}
       </div>
     </main>

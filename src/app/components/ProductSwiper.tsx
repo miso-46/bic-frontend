@@ -10,12 +10,14 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 type ScoreItem = {
   metricsId: number
+  name: string
   score: number
 }
 
 export const ProductSwiper = () => {
   const [products, setProducts] = useState<ProductData[]>([])
-  // const [scores, setScores] = useState<Record<number, number>>({})
+  const [scores, setScores] = useState<Record<number, number>>({})
+  const [metricIdToName, setMetricIdToName] = useState<Record<number, string>>({}) 
   const { receptionId } = useParams();
   useEffect(() => {
     const fetchProducts = async () => {
@@ -23,18 +25,22 @@ export const ProductSwiper = () => {
         const res1 = await fetch(`${apiUrl}/priority/${receptionId}`)
         const scoreList = await res1.json()
   
-        const scores = scoreList.reduce((acc: Record<number, number>, cur: ScoreItem) => {
-          acc[cur.metricsId] = cur.score
-          return acc
-        }, {})
+        // ✅ ここが該当箇所（修正ポイント）
+        const scoreMap: Record<number, number> = {}
+        const metricNameMap: Record<number, string> = {}
+
+        scoreList.forEach((item: ScoreItem) => {
+          scoreMap[item.metricsId] = item.score
+          metricNameMap[item.metricsId] = item.name
+        })        
+
+        setScores(scoreMap)
+        setMetricIdToName(metricNameMap)
   
         const payload = {
           receptionId: Number(receptionId),
-          scores,
+          scores: scoreMap,
         }
-  
-        // console.log("payload:", payload)
-        // setScores(scores)
   
         const res2 = await fetch(`${apiUrl}/recommend/confirm`, {
           method: 'POST',
@@ -59,10 +65,10 @@ export const ProductSwiper = () => {
   }, [receptionId])
 
   return (
-    <Swiper spaceBetween={50} slidesPerView={1}>
+    <Swiper spaceBetween={20} slidesPerView={1.2} centeredSlides={true}>
       {products.map((product, index) => (
         <SwiperSlide key={index}>
-          <ProductCard product={product} />
+          <ProductCard key={product.id} product={product} scores={scores} metricIdToName={metricIdToName}  />
         </SwiperSlide>
       ))}
     </Swiper>
