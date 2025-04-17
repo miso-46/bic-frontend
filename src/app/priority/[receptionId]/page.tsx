@@ -138,7 +138,7 @@ export default function PriorityPage() {
           />
           <div className={styles.speechBubble}>
             回答ありがとう！<br />
-            あなたの優先順位について確認するねー。<br />
+            あなたの優先順位について確認するね。<br />
             OKなら診断ボタン押して！
           </div>
         </section>
@@ -161,7 +161,14 @@ export default function PriorityPage() {
 
       <footer className={styles.footer}>
         <button className="px-4 py-2 rounded-full border border-red-500 text-red-500 hover:bg-red-50 transition-colors" onClick={() => router.push('/')}>トップに戻る</button>
-        <button className="px-4 py-2 rounded-full border border-black text-black hover:bg-gray-100 transition-colors">再入力</button>
+        <button className="px-4 py-2 rounded-full border border-black text-black hover:bg-gray-100 transition-colors" onClick={() => {
+            const categoryId = localStorage.getItem("category_id");
+            if (categoryId) {
+              router.push(`/chat/${categoryId}`);
+            } else {
+              alert("カテゴリ取得に失敗したのでトップに戻ってください");
+            }
+          }}>再入力</button>
         <button
             className="px-4 py-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors"
             onClick={async () => {
