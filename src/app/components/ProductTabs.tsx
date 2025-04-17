@@ -5,7 +5,7 @@ import { PriorityCard } from './PriorityCard'
 
 export default function ProductTabs() {
   return (
-    <><div className="w-full max-w-5xl mx-auto">
+    <div className="w-full max-w-5xl mx-auto">
       <Tab.Group>
         <Tab.List className="flex w-full p-1 space-x-1 bg-red-900/20 rounded-xl">
             <Tab
