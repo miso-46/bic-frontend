@@ -44,5 +44,6 @@ export default function ProductTabs() {
         </Tab.Panels>
       </Tab.Group>
     </div>
+    </>
   )
 }

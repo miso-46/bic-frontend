@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useParams, useRouter } from 'next/navigation';
 import styles from "./priority.module.css";
 import axios from 'axios';
+import { openDB } from 'idb';
 
 // 環境変数の読み取り
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -30,6 +31,23 @@ export default function PriorityPage() {
   const { receptionId } = useParams();
   // const [answers, setAnswers] = useState<Answer[]>([]);
   const [priorities, setPriorities] = useState<Priority[]>([]);
+  const [characterImage, setCharacterImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadCharacterImage = async () => {
+        try {
+            const db = await openDB('bicAppDB', 1);
+            const blob = await db.get('media', 'image');
+            if (blob) {
+                const url = URL.createObjectURL(blob);
+                setCharacterImage(url);
+            }
+        } catch (e) {
+            console.error('Failed to load character image from IndexedDB:', e);
+        }
+    };
+    loadCharacterImage();
+}, []);
 
   useEffect(() => {
     const fetchAndSend = async () => {
@@ -112,7 +130,7 @@ export default function PriorityPage() {
       <main className={styles.main}>
         <section className={styles.characterSection}>
           <Image
-            src="/images/girl.png"
+            src={characterImage || "/images/girl.png"}
             alt="キャラ画像"
             width={200}
             height={300}
