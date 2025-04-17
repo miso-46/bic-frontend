@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Link from 'next/link';
 import { FaSpinner } from 'react-icons/fa';
@@ -17,12 +17,12 @@ console.log('apiUrl:', apiUrl);
 
 type Question = {
     question_text: string;
-    options: { label: string; value: number }[]; 
+    options: { label: string; value: number }[];
 };
 
 export default function ChatPage() {
-    const { categoryId } = useParams();
-    console.log('categoryId:', categoryId);
+    const [categoryId, setCategoryId] = useState<string | null>(null);
+    const [categoryName, setCategoryName] = useState<string>('');
     const [questions, setQuestions] = useState<{ [id: string]: Question }>({});
     const [answers, setAnswers] = useState<{ [key: string]: number }>({});
     const [age, setAge] = useState<number | null>(null);
@@ -42,8 +42,15 @@ export default function ChatPage() {
     Object.keys(questions).length > 0 &&
     Object.keys(questions).every(id => answers[id] !== undefined);
 
+    useEffect(() => {
+        const storedCategoryId = localStorage.getItem("category_id");
+        const storedCategoryName = localStorage.getItem("category_name");
+        if (storedCategoryId) setCategoryId(storedCategoryId);
+        if (storedCategoryName) setCategoryName(storedCategoryName);
+    }, []);
 
     useEffect(() => {
+        if (!categoryId) return;
         const fetchQuestions = async () => {
             const res = await axios.get(`${apiUrl}/question/${categoryId}`);
             setQuestions(res.data);
@@ -161,7 +168,7 @@ export default function ChatPage() {
             />
             <div className="bg-[#FFBEBE] p-4 mt-2 rounded-md font-bold text-black">
                 あなたにおススメの<br />
-                【ロボット掃除機】<br />
+                {categoryName ? `【${categoryName}】` : '【カテゴリー】'}<br />
                 を診断するよー！<br />
                 いくつか質問するから、<br />
                 当てはまる答えを選んでね！
