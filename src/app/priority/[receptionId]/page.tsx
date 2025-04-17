@@ -151,7 +151,7 @@ export default function PriorityPage() {
             ) : (
               priorities.map((item, idx) => (
                 <li key={idx}>
-                  第{idx + 1}位：{item.name}（スコア：{item.score.toFixed(2)}）
+                  第{idx + 1}位：{item.name}
                 </li>
               ))
             )}
@@ -160,11 +160,10 @@ export default function PriorityPage() {
       </main>
 
       <footer className={styles.footer}>
-        <button className={styles.btnBack}>トップに戻る</button>
-        <button className={styles.btnWhite} onClick={() => location.reload()}>
-          再入力
-        </button>
+        <button className="px-4 py-2 rounded-full border border-red-500 text-red-500 hover:bg-red-50 transition-colors" onClick={() => router.push('/')}>トップに戻る</button>
+        <button className="px-4 py-2 rounded-full border border-black text-black hover:bg-gray-100 transition-colors">再入力</button>
         <button
+            className="px-4 py-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors"
             onClick={async () => {
               await savePriorities();
               router.push(`/recommend/${receptionId}`); // 例：診断結果ページへ遷移など
