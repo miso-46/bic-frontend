@@ -20,7 +20,7 @@ export default function Home() {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedAppliance, setSelectedAppliance] = useState<string>("");
+  const [selectedAppliance, setSelectedAppliance] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [videoError, setVideoError] = useState(false);
   const [talking, setTalking] = useState(false); // アニメーション用
@@ -28,7 +28,11 @@ export default function Home() {
   const [fallbackVideo, setFallbackVideo] = useState(false);
   const [girlName, setGirlName] = useState<string | null>(null);
 
-  const appliances = ["ロボット掃除機", "ドライヤー", "テレビ"];
+  const appliances: { [key: string]: number } = {
+    "ロボット掃除機": 1000,
+    "ドライヤー": 1000,
+    "テレビ": 1000,
+  };
   const bic_girl = "/images/girl.png";
 
   useEffect(() => {
@@ -154,7 +158,10 @@ export default function Home() {
 
   const handleGoButtonClick = () => {
     if (selectedAppliance) {
-      router.push("/chat/1000");
+      const categoryId = appliances[selectedAppliance];
+      localStorage.setItem("category_id", categoryId.toString());
+      localStorage.setItem("category_name", selectedAppliance);
+      router.push(`/chat/${categoryId}`);
     }
   };
 
@@ -259,13 +266,13 @@ export default function Home() {
 
               {isDropdownOpen && (
                 <div className="absolute z-10 mt-1 w-full bg-white border rounded-md shadow-lg">
-                  {appliances.map((appliance) => (
+                  {Object.entries(appliances).map(([name]) => (
                     <div
-                      key={appliance}
+                      key={name}
                       className="cursor-pointer p-4 text-2xl hover:bg-gray-100 border-b last:border-b-0"
-                      onClick={() => handleApplianceSelect(appliance)}
+                      onClick={() => handleApplianceSelect(name)}
                     >
-                      {appliance}
+                      {name}
                     </div>
                   ))}
                 </div>
