@@ -1,11 +1,26 @@
 /* === ベースレイアウト === */
 .container {
   font-family: sans-serif;
-  background: #f5f5f5;
-  height: 60vh;
+  background: #ffffff;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  /* 画面最大幅を1180pxに制限し中央寄せ */
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  /* 上下に30px余白を追加 */
+  padding-top: 30px;
+  padding-bottom: 30px;
+  box-sizing: border-box;
+  overflow: visible;
+  /* === CSS変数 === */
+  --btn-width-mobile: 48%;
+  --btn-width-desktop: 200px;
+  --btn-height: 40px;
+  --btn-radius: 9999px;
+  --btn-padding-vert: 8px;
+  --btn-padding-horiz: 16px;
 }
 
 /* === ヘッダー === */
@@ -15,12 +30,15 @@
   font-size: 22px;
   font-weight: bold;
   background-color: #fff;
-  flex-shrink: 0;
+  /* 固定高さにして残りをmainが埋める */
+  flex: 0 0 auto;
 }
 
 /* === メイン表示領域（スマホは縦並び） === */
 .main {
-  flex: 1;
+  box-sizing: border-box;
+  /* 残り高さを埋める */
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -31,94 +49,172 @@
 
 /* === キャラクター表示部分 === */
 .characterSection {
-  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* スマホでキャラと吹き出しを広げる */
+  width: 100%;
 }
 
 .characterImage {
   width: 150px;
   height: auto;
-  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 0;
 }
 
 /* === 吹き出し === */
 .speechBubble {
+  width: 100%;
   background: #ffe0e0;
   padding: 10px;
   border-radius: 10px;
   text-align: center;
   font-size: 14px;
-  max-width: 90%;
+  max-width: 100%;
   margin: 0 auto;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  box-sizing: border-box;
 }
 
 /* === 優先順位セクション === */
 .rankingSection {
   background: #fff;
   padding: 15px;
+  margin: 0 auto;
   border-radius: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   font-size: 14px;
-  width: 90%;
-  max-width: 400px;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
 }
 
+/* === 優先順位グリッドレイアウト === */
+.rankGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+/* 読み込み中テキスト */
+.loading {
+  text-align: center;
+  font-size: 16px;
+  padding: 20px 0;
+}
+
+/* 各リスト（列）のスタイル調整 */
 .rankList {
   list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
 
-/* === 各順位の表示行（オプションで装飾） === */
+/* 各順位アイテム */
 .rankItem {
-  padding: 6px 0;
+  padding: 6px 8px;
   border-bottom: 1px dashed #ccc;
+  font-size: 14px;
 }
 
 /* === フッター（もしあれば） === */
 .footer {
   text-align: center;
   padding: 10px;
-  flex-shrink: 0;
+  /* フッターも固定 */
+  flex: 0 0 auto;
 }
 
 /* === ボタン共通スタイル === */
-.button {
+.btnCommon {
+  width: var(--btn-width-mobile);
+  height: var(--btn-height);
+  padding: var(--btn-padding-vert) var(--btn-padding-horiz);
+  border-radius: var(--btn-radius);
+  box-sizing: border-box;
   font-size: 14px;
-  margin: 0 10px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.2s;
+  display: inline-block;
+}
+@media screen and (min-width: 768px) {
+  .btnCommon {
+    width: var(--btn-width-desktop);
+  }
 }
 
-.btnRed {
-  background: red;
-  color: white;
-}
-
-.btnWhite {
-  background: white;
-  border: 1px solid #ccc;
-}
-
-.btnBack {
-  color: red;
+/* トップに戻るボタン */
+.btnReturn {
+  border: 1px solid #ef4444;
+  color: #ef4444;
   background: none;
-  text-decoration: underline;
-  border: none;
+  display: none;
+}
+.btnReturn:hover {
+  background: #fef2f2;
+}
+@media screen and (min-width: 768px) {
+  .btnReturn {
+    display: inline-block;
+  }
 }
 
-/* === 768px以上（タブレット・PC）では横並びに変更 === */
+/* 再入力ボタン */
+.btnReset {
+  border: 1px solid #000;
+  color: #000;
+  background: none;
+  display: inline-block;
+}
+.btnReset:hover {
+  background: #f3f4f6;
+}
+
+/* 診断ボタン */
+.btnDiagnose {
+  background: #ef4444;
+  color: #fff;
+  display: inline-block;
+}
+.btnDiagnose:hover {
+  background: #dc2626;
+}
+
 @media screen and (min-width: 768px) {
   .main {
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
+    align-items: stretch;
+    /* タブレット・PCでは全内容を表示（スクロール不要） */
+    max-height: 500px;
+    overflow-y: visible;
+  }
+
+  /* セクション共通設定：幅50%・高さ揃え */
+  .characterSection,
+  .rankingSection {
+    flex: 0 0 50%;   /* 幅50%固定 */
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* キャラクターは中央揃え */
+  .characterSection {
     align-items: center;
   }
 
-  .characterSection, .rankingSection {
-    flex: 1;
-    max-width: 45%;
+  /* ランキングは幅いっぱいに広げる */
+  .rankingSection {
+    align-items: stretch;
   }
 
   .characterImage {
@@ -133,5 +229,10 @@
   .rankingSection {
     font-size: 15px;
     padding: 20px;
+  }
+
+  .footer button:nth-child(2),
+  .footer button:nth-child(3) {
+    width: 200px;
   }
 }

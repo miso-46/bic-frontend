@@ -145,28 +145,36 @@ export default function PriorityPage() {
 
         <section className={styles.rankingSection}>
           <h2>優先順位</h2>
-          <ul className={styles.rankList}>
-            {priorities.length === 0 ? (
-              <li>読み込み中...</li>
-            ) : (
-              priorities.map((item, idx) => (
-                <li key={idx}>
-                  第{idx + 1}位：{item.name}
-                </li>
-              ))
-            )}
-          </ul>
+          {priorities.length === 0 ? (
+            <p className={styles.loading}>読み込み中...</p>
+          ) : (
+            <div className={styles.rankGrid}>
+              {[
+                priorities.slice(0, 3),
+                priorities.slice(3, 6),
+                priorities.slice(6, 9),
+              ].map((group, groupIndex) => (
+                <ul key={groupIndex} className={styles.rankList}>
+                  {group.map((item, idx) => (
+                    <li key={idx} className={styles.rankItem}>
+                      第{groupIndex * 3 + idx + 1}位：{item.name}
+                    </li>
+                  ))}
+                </ul>
+              ))}
+            </div>
+          )}
         </section>
       </main>
 
       <footer className={styles.footer}>
-        <button className="px-4 py-2 rounded-full border border-red-500 text-red-500 hover:bg-red-50 transition-colors" onClick={() => router.push('/')}>トップに戻る</button>
-        <button className="px-4 py-2 rounded-full border border-black text-black hover:bg-gray-100 transition-colors">再入力</button>
+        <button className={`${styles.btnCommon} ${styles.btnReturn}`} onClick={() => router.push('/')}>トップに戻る</button>
+        <button className={`${styles.btnCommon} ${styles.btnReset}`}>再入力</button>
         <button
-            className="px-4 py-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors"
+            className={`${styles.btnCommon} ${styles.btnDiagnose}`}
             onClick={async () => {
               await savePriorities();
-              router.push(`/recommend/${receptionId}`); // 例：診断結果ページへ遷移など
+              router.push(`/recommend/${receptionId}`);
             }}
             >
             診断
