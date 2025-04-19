@@ -8,6 +8,7 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const analysisUrl = process.env.NEXT_PUBLIC_ANALYSIS_URL;
 console.log('apiUrl:', apiUrl);
 
 export default function AdminPage() {
@@ -108,7 +109,7 @@ export default function AdminPage() {
 
           <div className="h-3"></div>
 
-          <Link href="/data-analysis">
+          <Link href={analysisUrl ?? "#"}>
             <button className="w-full py-3 border border-gray-300 hover:bg-gray-50 transition-colors">
               接客データ分析
             </button>
