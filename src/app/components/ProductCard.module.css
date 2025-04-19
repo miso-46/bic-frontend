@@ -1,16 +1,38 @@
 .card {
   border: 1px solid #ccc;
   padding: 16px;
-  border-radius: 4px;
-  /* 他の共通スタイルがあればここに */
+  border-radius: 12px; /* 角をより丸く */
+  /* 立体感のあるシャドウ */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .columns {
   display: flex;           /* flexで並べる */
-  flex-direction: row;     /* 横並び */
+  flex-direction: column;   /* デフォルトは縦並び */
   justify-content: space-between; 
   align-items: flex-start; 
   gap: 20px;               /* カラム間の隙間 */
+}
+
+@media screen and (max-width: 767px) {
+  .productInfo { order: 1; }
+  .chartContainer { order: 2; }
+  .description { font-size: 14px; }
+  /* モバイル時: カード幅を95%にして次のカードを少し覗かせる */
+  .card {
+    width: 105%;
+    margin: 8px auto;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .columns {
+    flex-direction: row;   /* 横並び */
+  }
+  .productInfo,
+  .chartContainer {
+    order: 0;
+  }
 }
 
 .productInfo {
@@ -19,6 +41,10 @@
 }
 
 .chartContainer {
+  /* モバイル時にカード幅に収める */
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
   flex: 1;
   /* レーダーチャートを中央寄せで見せたいなら */
   display: flex;
@@ -43,3 +69,5 @@
 .actions button {
   margin: 4px;
 }
+
+/* モバイル用幅制御はSwiperのslidesPerViewで制御します */

@@ -13,6 +13,7 @@ export type ProductData = {
   }
   description: string
   category: string
+  image?: string
   scores: Record<number, number> // 👈 商品ごとのスコア（metrics_idベース）
 }
 
@@ -38,6 +39,18 @@ export const ProductCard = ({
       </div>
       {/* ▼ 商品情報（テキスト部分） */}
       <div className={styles.productInfo}>
+        {product.image && (
+          <img
+            src={product.image}
+            alt={product.name}
+            style={{
+              maxWidth: '165px',
+              maxHeight: '165px',
+              objectFit: 'contain',
+              marginBottom: '8px',
+            }}
+          />
+        )}
         <h2>{product.name}</h2>
         <p className={styles.price}>価格: {product.price} 円</p>
         <p>ブランド: {product.brand}</p>
