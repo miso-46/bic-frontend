@@ -10,6 +10,7 @@ import {
   Legend,
 } from 'chart.js'
 import { Radar } from 'react-chartjs-2'
+import { useEffect, useState } from 'react'
 
 ChartJS.register(
   RadialLinearScale,
@@ -41,6 +42,19 @@ export const RadarChart = ({
   // 表示順の基準となる metricsId の一覧
   const metricIds = Object.keys(scores).map(Number)
   const labels = metricIds.map((id) => metricIdToName[id] ?? `指標${id}`)
+  // モバイル判定
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  // 長いラベルは8文字ごとに折り返し
+  const wrappedLabels = labels.map((label) => {
+    if (label.length <= 8) return label
+    return label.match(new RegExp(`.{1,8}`, 'g')) || [label]
+  })
   // 万一の保険：score keyがstringでもnumberに揃える
   const normalizeScores = (raw: Record<string | number, number>): Scores => {
     const normalized: Scores = {}
@@ -51,18 +65,22 @@ export const RadarChart = ({
   }
 
   const options = {
+    // モバイル時のタップでの表示設定
+    interaction: { mode: 'nearest' as const, intersect: true },
     scales: {
       r: {
         min: 3,
         // max: 5,
         ticks: {
+          display: false,
           stepSize: 0.1,
           backdropColor: 'transparent',
           color: '#555',
-          font: { size: 12 },
+          font: { size: 10 },
         },
         pointLabels: {
-          font: { size: 12 },
+          display: !isMobile, // モバイル時は非表示
+          font: { size: 10 },
           color: '#333',
         },
       },
@@ -71,12 +89,23 @@ export const RadarChart = ({
       legend: {
         position: 'top' as const,
       },
+      // モバイル時のツールチップは interaction で制御し、ここでは有効/無効のみ設定
+      tooltip: {
+        enabled: isMobile,
+        callbacks: {
+          title: (items: any[]) => {
+            const idx = items[0].dataIndex
+            return Array.isArray(labels[idx]) ? labels[idx].join('\n') : labels[idx]
+          },
+          label: (ctx: any) => `${ctx.dataset.label}: ${ctx.parsed.r}`,
+        },
+      },
     },
   }
 
   const datasets = [
     {
-      label: '現在のスコア',
+      label: 'あなたのスコア',
       data: metricIds.map((id) => scores[id] ?? 0),
       backgroundColor: 'rgba(255, 99, 132, 0.2)',
       borderColor: 'rgba(255, 99, 132, 1)',
@@ -85,7 +114,7 @@ export const RadarChart = ({
     ...products.map((product) => {
       const productScores = normalizeScores(product.scores)
       return {
-        label: product.name,
+        label: 'おすすめの商品',
         data: metricIds.map((id) => productScores[id] ?? 0),
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         borderColor: 'rgba(54, 162, 235, 1)',
@@ -94,5 +123,24 @@ export const RadarChart = ({
     }),
   ]
 
-  return <Radar data={{ labels, datasets }} options={options} />
+  return (
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: isMobile ? '250px' : '400px', // モバイル時は高さを圧縮
+        padding: '20px',
+      }}
+    >
+      <Radar
+        data={{ labels: wrappedLabels, datasets }}
+        options={{
+          ...options,
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: { padding: 20 },
+        }}
+      />
+    </div>
+  )
 }

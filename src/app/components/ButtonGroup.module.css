@@ -1,0 +1,62 @@
+/* 共通のボタンスタイル */
+.btnCommon {
+  width: 48%;
+  height: 40px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  box-sizing: border-box;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: inline-block;
+  margin: 0 1%;
+}
+@media screen and (min-width: 768px) {
+  .btnCommon {
+    width: 200px;
+  }
+}
+
+/* トップに戻るボタン */
+.btnReturn {
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  background: none;
+  display: none;
+}
+.btnReturn:hover {
+  background: #fef2f2;
+}
+@media screen and (min-width: 768px) {
+  .btnReturn {
+    display: inline-block;
+  }
+}
+
+/* 再入力ボタン */
+.btnReset {
+  border: 1px solid #000;
+  color: #000;
+  background: none;
+  display: inline-block;
+}
+.btnReset:hover {
+  background: #f3f4f6;
+}
+
+/* 診断/呼出ボタン */
+.btnDiagnose {
+  background: #ef4444;
+  color: #fff;
+  display: inline-block;
+}
+.btnDiagnose:hover {
+  background: #dc2626;
+}
+
+/* フッターコンテナ（ボタンラップ） */
+.footer {
+  text-align: center;
+  padding: 10px;
+  flex: 0 0 auto;
+} 

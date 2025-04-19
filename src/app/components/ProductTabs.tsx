@@ -33,12 +33,9 @@ export default function ProductTabs() {
         </Tab.List>
         <Tab.Panels className="mt-2">
           <Tab.Panel className="bg-white rounded-xl p-3">
-            {/* おすすめの商品レビューの内容として、既存の ProductSwiper を使用 */}
             <ProductSwiper />
           </Tab.Panel>
           <Tab.Panel className="bg-white rounded-xl p-3">
-            {/* 優先順位のコンテンツ（ここは後で詳細を実装する） */}
-            <h2 className="text-lg font-bold">優先順位</h2>
             <PriorityCard />
           </Tab.Panel>
         </Tab.Panels>

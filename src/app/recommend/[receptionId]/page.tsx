@@ -1,6 +1,7 @@
 'use client'
 
 import  ProductTabs  from '../../components/ProductTabs'
+import buttonGroupStyles from '../../components/ButtonGroup.module.css'
 import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import axios from 'axios'
@@ -50,20 +51,32 @@ export default function Home() {
         </h2>
       )}
       <ProductTabs />
-      <div className="flex justify-center gap-4 my-4">
-        <button className="px-4 py-2 rounded-full border border-red-500 text-red-500 hover:bg-red-50 transition-colors" onClick={() => router.push('/')}>トップに戻る</button>
-        <button className="px-4 py-2 rounded-full border border-black text-black hover:bg-gray-100 transition-colors" onClick={() => {
+      <footer className={buttonGroupStyles.footer}>
+        <button
+          className={`${buttonGroupStyles.btnCommon} ${buttonGroupStyles.btnReturn}`}
+          onClick={() => {
+            localStorage.removeItem(`recommendation_${receptionId}`)
+            router.push('/')
+          }}
+        >
+          トップに戻る
+        </button>
+        <button
+          className={`${buttonGroupStyles.btnCommon} ${buttonGroupStyles.btnReset}`}
+          onClick={() => {
+            localStorage.removeItem(`recommendation_${receptionId}`)
             const categoryId = localStorage.getItem("category_id");
             if (categoryId) {
               router.push(`/chat/${categoryId}`);
             } else {
               alert("カテゴリ取得に失敗したのでトップに戻ってください");
             }
-          }}>再入力</button>
-        {showCallButton && (
-          <button className="px-4 py-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors" onClick={handleCallSales}>店員を呼ぶ</button>
-        )}
-      </div>
+          }}
+        >
+          再入力
+        </button>
+        <button className={`${buttonGroupStyles.btnCommon} ${buttonGroupStyles.btnDiagnose}`} onClick={handleCallSales}>店員を呼ぶ</button>
+      </footer>
     </main>
   )
 }
