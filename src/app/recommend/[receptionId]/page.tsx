@@ -75,7 +75,11 @@ export default function Home() {
         >
           再入力
         </button>
-        <button className={`${buttonGroupStyles.btnCommon} ${buttonGroupStyles.btnDiagnose}`} onClick={handleCallSales}>店員を呼ぶ</button>
+        {showCallButton && (
+          <button className={`${buttonGroupStyles.btnCommon} ${buttonGroupStyles.btnDiagnose}`} onClick={handleCallSales}>
+            店員を呼ぶ
+          </button>
+        )}
       </footer>
     </main>
   )
