@@ -199,7 +199,7 @@ export default function ChatPage() {
                         setAge(opt);
                         if (currentStep === 1) setTimeout(() => setCurrentStep(2), 800);
                         }}
-                        className={`px-4 py-2 border rounded shadow bg-white text-black ${age == opt ? 'bg-gray-200' : ''} hover:bg-gray-100`}
+                        className={`px-4 py-2 border rounded shadow text-black ${age == opt ? 'bg-gray-300' : 'bg-white hover:bg-gray-100'}`}
                     >
                         {opt}代
                     </button>
@@ -223,7 +223,7 @@ export default function ChatPage() {
                         setGender(opt.value);
                         if (currentStep === 2) setTimeout(() => setCurrentStep(3), 800);
                         }}
-                        className={`px-4 py-2 border rounded shadow bg-white text-black ${gender == opt.value ? 'bg-gray-200' : ''} hover:bg-gray-100`}
+                        className={`px-4 py-2 border rounded shadow text-black ${gender == opt.value ? 'bg-gray-300' : 'bg-white hover:bg-gray-100'}`}
                     >
                         {opt.label}
                     </button>
@@ -243,7 +243,7 @@ export default function ChatPage() {
                         setHousehold(String(opt));
                         if (currentStep === 3) setTimeout(() => setCurrentStep(4), 800);
                         }}
-                        className={`px-4 py-2 border rounded shadow bg-white text-black ${household == String(opt) ? 'bg-gray-200' : ''} hover:bg-gray-100`}
+                        className={`px-4 py-2 border rounded shadow text-black ${household == String(opt) ? 'bg-gray-300' : 'bg-white hover:bg-gray-100'}`}
                     >
                         {opt}人
                     </button>
@@ -262,17 +262,20 @@ export default function ChatPage() {
                         {q.question_text}
                         </div>
                         <div className="mt-2 flex gap-4 flex-wrap">
-                        {q.options.map((option: { label: string; value: number }) => (
-                            <button
-                            key={option.value}
-                            onClick={() => handleChoice(id, option.value)}
-                            className={`px-4 py-2 border rounded shadow bg-white text-black ${
-                                answers[id] == option.value ? 'bg-gray-200' : ''
-                            } hover:bg-gray-100`}
-                            >
-                            {option.label}
-                            </button>
-                        ))}
+                        {q.options.map((option: { label: string; value: number }) => {
+                              const isSelected = answers[id] === option.value;
+                              return (
+                                <button
+                                  key={option.value}
+                                  onClick={() => handleChoice(id, option.value)}
+                                  className={`px-4 py-2 border rounded shadow text-black ${
+                                    isSelected ? 'bg-gray-300' : 'bg-white hover:bg-gray-100'
+                                  }`}
+                                >
+                                  {option.label}
+                                </button>
+                              );
+                        })}
                         </div>
                     </div>
                     )
