@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { openDB } from "idb";
 
@@ -18,6 +18,7 @@ const getMediaDB = async () => {
 
 export default function Home() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedAppliance, setSelectedAppliance] = useState<string | null>(null);
@@ -27,25 +28,81 @@ export default function Home() {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [fallbackVideo, setFallbackVideo] = useState(false);
   const [girlName, setGirlName] = useState<string | null>(null);
+  const [storeReady, setStoreReady] = useState(false);
+  const [storeAvailable, setStoreAvailable] = useState(true);
 
-  const appliances: { [key: string]: number } = {
-    "ロボット掃除機": 1000,
-    "ドライヤー": 1000,
-    "テレビ": 1000,
-  };
-  const bic_girl = "/images/girl.png";
+  const fetchStoreData = async (storeId: string) => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${storeId}`);
+      if (!res.ok) throw new Error("APIリクエスト失敗");
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedName = localStorage.getItem("girl_name");
-      if (storedName) {
-        setGirlName(storedName);
-      }
+      const data = await res.json();
+
+      localStorage.setItem("girl_name", data.character.name);
+      localStorage.setItem("store_id", data.store_id.toString());
+      localStorage.setItem("store_name", data.store_name);
+      localStorage.setItem("store_prefecture", data.prefecture);
+
+      const db = await openDB("bicAppDB", 1, {
+        upgrade(db) {
+          if (db.objectStoreNames.contains("media")) {
+            db.deleteObjectStore("media");
+          }
+          db.createObjectStore("media");
+        },
+      });
+
+      const fetchAndStoreBlob = async (key: string, url: string | null) => {
+        if (!url) return;
+        try {
+          const res = await fetch(url);
+          const blob = await res.blob();
+          await db.put("media", blob, key);
+        } catch (err) {
+          console.error(`${key} の取得に失敗しました`, err);
+        }
+      };
+
+      await fetchAndStoreBlob("image", data.character.image);
+      await fetchAndStoreBlob("video", data.character.video);
+      await fetchAndStoreBlob("voice_1", data.character.voice_1);
+      await fetchAndStoreBlob("voice_2", data.character.voice_2);
+      await db.put("media", data.character.message_1 || "", "voice_1_message");
+      await db.put("media", data.character.message_2 || "", "voice_2_message");
+
+      setGirlName(data.character.name); // useStateにセット
+      setStoreAvailable(true);
+    } catch (err) {
+      console.error("保存中のエラー:", err);
+      setStoreAvailable(false);
+    } finally {
+      setStoreReady(true);
     }
-  }, []);
+  };
 
-  // 動画の読み込みエラー処理
   useEffect(() => {
+    const initialize = async () => {
+      let storeId = searchParams.get("store_id");
+
+      if (!storeId && typeof window !== "undefined") {
+        storeId = localStorage.getItem("store_id");
+      }
+
+      if (!storeId) {
+        setStoreAvailable(false);
+        setStoreReady(true);
+        return;
+      }
+
+      await fetchStoreData(storeId);
+    };
+
+    initialize();
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!storeReady) return;
+
     const video = videoRef.current;
     if (!video) return;
 
@@ -54,19 +111,17 @@ export default function Home() {
     };
 
     video.addEventListener("error", handleError);
-
     return () => {
       video.removeEventListener("error", handleError);
     };
-  }, []);
+  }, [storeReady]);
 
-  // 動画の自動再生
   useEffect(() => {
     const loadVideo = async () => {
       try {
         const db = await getMediaDB();
         const blob = await db.get("media", "video");
-  
+
         let src: string;
         if (blob instanceof Blob && blob.size > 0) {
           src = URL.createObjectURL(blob);
@@ -77,8 +132,7 @@ export default function Home() {
           setVideoSrc(src);
           setFallbackVideo(true);
         }
-  
-        // 再生処理（videoRefに一度反映された後）
+
         setTimeout(() => {
           const video = videoRef.current;
           if (video) {
@@ -88,7 +142,7 @@ export default function Home() {
               setVideoError(true);
             });
           }
-        }, 100); // 反映のタイミングを待つ
+        }, 100);
       } catch (error) {
         console.error("動画の取得に失敗しました", error);
         setVideoSrc("/images/bic-girl.mp4");
@@ -96,11 +150,13 @@ export default function Home() {
         setVideoError(true);
       }
     };
-    loadVideo();
-  }, []);
 
-  // メッセージを順番に変更して音声を再生
+    if (storeReady) loadVideo();
+  }, [storeReady]);
+
   useEffect(() => {
+    if (!storeReady) return;
+
     const messages = [
       { key: "voice_1", fallbackAudio: "/sounds/osusume.mp3", fallbackText: "おススメの家電を一緒に検討しましょう！", messageKey: "voice_1_message" },
       { key: "voice_2", fallbackAudio: "/sounds/pittari.mp3", fallbackText: "あなたにぴったりの家電を見つけますよ！", messageKey: "voice_2_message" },
@@ -131,20 +187,18 @@ export default function Home() {
 
       setTalking(true);
       setTimeout(() => setTalking(false), 1500);
-
       currentIndex = (currentIndex + 1) % messages.length;
     };
 
     playNext();
-    const intervalId = setInterval(playNext, 5000); // 音声再生の間隔
+    const intervalId = setInterval(playNext, 5000);
 
     return () => {
       clearInterval(intervalId);
       audio.pause();
     };
-  }, []);
+  }, [storeReady]);
 
-  // 家電が選択されたときのメッセージ変更
   useEffect(() => {
     if (selectedAppliance) {
       setMessage(`${selectedAppliance}ですね！いい選択です！`);
@@ -168,6 +222,30 @@ export default function Home() {
   const handleAdminButtonClick = () => {
     router.push("/login");
   };
+
+  if (!storeReady) {
+    return <div className="flex items-center justify-center h-screen">読み込み中...</div>;
+  }
+
+  if (!storeAvailable) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <button
+          className="bg-red-500 text-white text-3xl font-bold py-4 px-12 rounded-full"
+          onClick={() => router.push("/login")}
+        >
+          管理者メニューへ
+        </button>
+      </div>
+    );
+  }
+
+  const appliances: { [key: string]: number } = {
+    "ロボット掃除機": 1000,
+    "ドライヤー": 1000,
+    "テレビ": 1000,
+  };
+  const bic_girl = "/images/girl.png";
 
   return (
     <div className="flex flex-col h-auto">
