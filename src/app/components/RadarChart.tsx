@@ -10,6 +10,7 @@ import {
   Legend,
 } from 'chart.js'
 import { Radar } from 'react-chartjs-2'
+import type { TooltipItem } from 'chart.js'
 import { useEffect, useState } from 'react'
 
 ChartJS.register(
@@ -93,11 +94,11 @@ export const RadarChart = ({
       tooltip: {
         enabled: isMobile,
         callbacks: {
-          title: (items: any[]) => {
+          title: (items: TooltipItem<'radar'>[]) => {
             const idx = items[0].dataIndex
             return Array.isArray(labels[idx]) ? labels[idx].join('\n') : labels[idx]
           },
-          label: (ctx: any) => `${ctx.dataset.label}: ${ctx.parsed.r}`,
+          label: (ctx: TooltipItem<'radar'>) => `${ctx.dataset.label}: ${ctx.parsed.r}`,
         },
       },
     },

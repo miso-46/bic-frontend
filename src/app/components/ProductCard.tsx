@@ -1,4 +1,5 @@
 import styles from './ProductCard.module.css'
+import Image from 'next/image'
 import { RadarChart } from './RadarChart'
 
 export type ProductData = {
@@ -40,15 +41,12 @@ export const ProductCard = ({
       {/* ▼ 商品情報（テキスト部分） */}
       <div className={styles.productInfo}>
         {product.image && (
-          <img
+          <Image
             src={product.image}
             alt={product.name}
-            style={{
-              maxWidth: '165px',
-              maxHeight: '165px',
-              objectFit: 'contain',
-              marginBottom: '8px',
-            }}
+            width={165}
+            height={165}
+            style={{ objectFit: 'contain', marginBottom: '8px' }}
           />
         )}
         <h2>{product.name}</h2>
