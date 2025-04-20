@@ -39,7 +39,6 @@ export default function LoginPage() {
       localStorage.setItem("store_id", data.store_id.toString());
       localStorage.setItem("store_name", data.store_name);
       localStorage.setItem("store_prefecture", data.prefecture);
-      localStorage.setItem("girl_name", character.name);
 
       // 初回ログイン時、BlobをIndexedDBに保存
       const db = await openDB("bicAppDB", 1, {
@@ -62,6 +61,7 @@ export default function LoginPage() {
         }
       };
 
+      await fetchAndStoreBlob("girl_name", data.character.image);
       await fetchAndStoreBlob("image", character.image);
       await fetchAndStoreBlob("video", character.video);
       await fetchAndStoreBlob("voice_1", character.voice_1);
