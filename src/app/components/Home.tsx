@@ -45,7 +45,6 @@ export default function Home() {
 
       const data = await res.json();
 
-      localStorage.setItem("girl_name", data.character.name);
       localStorage.setItem("store_id", data.store_id.toString());
       localStorage.setItem("store_name", data.store_name);
       localStorage.setItem("store_prefecture", data.prefecture);
@@ -70,12 +69,14 @@ export default function Home() {
         }
       };
 
+      await fetchAndStoreBlob("girl_name", data.character.image);
       await fetchAndStoreBlob("image", data.character.image);
       await fetchAndStoreBlob("video", data.character.video);
       await fetchAndStoreBlob("voice_1", data.character.voice_1);
       await fetchAndStoreBlob("voice_2", data.character.voice_2);
       await db.put("media", data.character.message_1 || "", "voice_1_message");
       await db.put("media", data.character.message_2 || "", "voice_2_message");
+      await db.put("media", data.character.name || "", "girl_name");
 
       setGirlName(data.character.name); // useStateにセット
       setStoreAvailable(true);
@@ -89,21 +90,41 @@ export default function Home() {
 
   useEffect(() => {
     const initialize = async () => {
-      let storeId = searchParams.get("store_id");
-
-      if (!storeId && typeof window !== "undefined") {
-        storeId = localStorage.getItem("store_id");
-      }
-
+      let storeId = searchParams.get("store_id") || (typeof window !== "undefined" && localStorage.getItem("store_id"));
+ 
       if (!storeId) {
         setStoreAvailable(false);
         setStoreReady(true);
         return;
       }
+ 
+      const db = await getMediaDB();
 
-      await fetchStoreData(storeId);
+      const girlNameCache = await db.get("media", "girl_name");
+      if (typeof girlNameCache === "string") {
+        setGirlName(girlNameCache);
+      }
+ 
+      const [image, video, voice1, voice2, message1, message2] = await Promise.all([
+        db.get("media", "image"),
+        db.get("media", "video"),
+        db.get("media", "voice_1"),
+        db.get("media", "voice_2"),
+        db.get("media", "voice_1_message"),
+        db.get("media", "voice_2_message"),
+      ]);
+ 
+      const hasAllMedia = image && video && voice1 && voice2 && typeof message1 === "string" && typeof message2 === "string";
+ 
+      if (hasAllMedia) {
+        setStoreReady(true);
+        sessionStorage.setItem("assetsReady", "true");
+      }
+ 
+      // バックグラウンドでの更新
+      fetchStoreData(storeId);
     };
-
+ 
     initialize();
   }, [searchParams]);
 
