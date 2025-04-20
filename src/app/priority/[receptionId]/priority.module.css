@@ -26,9 +26,9 @@
 /* === ヘッダー === */
 .header {
   text-align: center;
-  padding: 10px;
-  font-size: 22px;
+  font-size: 1.875rem;
   font-weight: bold;
+  margin: 20px;
   background-color: #fff;
   /* 固定高さにして残りをmainが埋める */
   flex: 0 0 auto;
@@ -68,7 +68,7 @@
 /* === 吹き出し === */
 .speechBubble {
   width: 100%;
-  background: #ffe0e0;
+  background: #FFE8E8;
   padding: 10px;
   border-radius: 10px;
   text-align: center;

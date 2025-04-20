@@ -291,8 +291,8 @@ export default function Home() {
         {/* 左側のキャラクター部分 */}
         <div className="w-full md:w-1/2 p-4 relative">
           <div className="flex justify-center">
-            <div className="bg-[#FFBEBE] rounded-2xl p-3 mb-4 max-w-[400px] relative text-center">
-              <div className="absolute -bottom-2 left-6 w-4 h-4 bg-[#FFBEBE] rotate-45"></div>
+            <div className="bg-[#FFE8E8] rounded-2xl p-3 mb-4 max-w-[400px] relative text-center">
+              <div className="absolute -bottom-2 left-6 w-4 h-4 bg-[#FFE8E8] rotate-45"></div>
               <p className="text-md transition-opacity duration-300">{message}</p>
             </div>
           </div>

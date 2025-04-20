@@ -17,7 +17,7 @@ export default function ProductTabs() {
                     }`
                 }
             >
-                おすすめの商品レビュー
+                おすすめの商品
             </Tab>
             <Tab
                 className={({ selected }) =>

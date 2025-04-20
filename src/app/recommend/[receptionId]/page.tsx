@@ -5,6 +5,12 @@ import buttonGroupStyles from '../../components/ButtonGroup.module.css'
 import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import axios from 'axios'
+import { M_PLUS_Rounded_1c } from 'next/font/google';
+
+const mplusRounded = M_PLUS_Rounded_1c({
+  weight: '700',
+  subsets: ['latin'],
+});
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 console.log('apiUrl:', apiUrl);
@@ -44,7 +50,9 @@ export default function Home() {
 
   return (
     <main>
-      <h1 style={{ textAlign: 'center', margin: '20px' }}>おすすめ商品レビュー</h1>
+      <h1 className={`${mplusRounded.className} text-3xl font-bold`} style={{ textAlign: 'center', margin: '20px' }}>
+        REVIEW
+      </h1>
       {isCallingSales && (
         <h2 style={{ textAlign: 'center', color: 'red' }}>
           店員呼出し中です。お待ちください・・・

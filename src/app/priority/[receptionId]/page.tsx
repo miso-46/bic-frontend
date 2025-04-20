@@ -7,6 +7,12 @@ import styles from "./priority.module.css";
 import axios from 'axios';
 import { openDB } from 'idb';
 import { FaSpinner } from 'react-icons/fa';
+import { M_PLUS_Rounded_1c } from 'next/font/google';
+
+const mplusRounded = M_PLUS_Rounded_1c({
+  weight: '700',
+  subsets: ['latin'],
+});
 
 // 環境変数の読み取り
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -125,7 +131,9 @@ export default function PriorityPage() {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>あなたの優先順位</header>
+      <header className={`${styles.header} ${mplusRounded.className}`}>
+        あなたの優先順位
+      </header>
 
       <main className={styles.main}>
         <section className={styles.characterSection}>
