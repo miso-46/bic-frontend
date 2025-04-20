@@ -5,11 +5,12 @@
   padding: 8px 16px;
   border-radius: 9999px;
   box-sizing: border-box;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   transition: background-color 0.2s;
   display: inline-block;
   margin: 0 1%;
+  text-align: center;
 }
 @media screen and (min-width: 768px) {
   .btnCommon {
@@ -49,6 +50,7 @@
   background: #ef4444;
   color: #fff;
   display: inline-block;
+  font-weight: bold;
 }
 .btnDiagnose:hover {
   background: #dc2626;

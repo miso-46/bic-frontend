@@ -1,4 +1,3 @@
-// app/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,6 +6,13 @@ import { useParams, useRouter } from 'next/navigation';
 import styles from "./priority.module.css";
 import axios from 'axios';
 import { openDB } from 'idb';
+import { FaSpinner } from 'react-icons/fa';
+import { M_PLUS_Rounded_1c } from 'next/font/google';
+
+const mplusRounded = M_PLUS_Rounded_1c({
+  weight: '700',
+  subsets: ['latin'],
+});
 
 // 環境変数の読み取り
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -29,9 +35,9 @@ type Priority = {
 export default function PriorityPage() {
   const router = useRouter();
   const { receptionId } = useParams();
-  // const [answers, setAnswers] = useState<Answer[]>([]);
   const [priorities, setPriorities] = useState<Priority[]>([]);
   const [characterImage, setCharacterImage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const loadCharacterImage = async () => {
@@ -125,7 +131,9 @@ export default function PriorityPage() {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>あなたの優先順位</header>
+      <header className={`${styles.header} ${mplusRounded.className}`}>
+        あなたの優先順位
+      </header>
 
       <main className={styles.main}>
         <section className={styles.characterSection}>
@@ -180,6 +188,7 @@ export default function PriorityPage() {
         <button
             className={`${styles.btnCommon} ${styles.btnDiagnose}`}
             onClick={async () => {
+              setIsLoading(true);
               await savePriorities();
               router.push(`/recommend/${receptionId}`);
             }}
@@ -187,6 +196,11 @@ export default function PriorityPage() {
             診断
             </button>
       </footer>
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <FaSpinner className="animate-spin text-white text-4xl" />
+        </div>
+      )}
     </div>
   );
 }

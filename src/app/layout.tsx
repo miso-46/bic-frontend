@@ -6,8 +6,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ビッカメ娘 - おススメ家電診断",
-  description: "家電選びをサポートする診断アプリ",
+  title: "AIビッカメ娘 - おススメ家電診断",
+  description: "家電選びをサポートするAI診断アプリ",
 };
 
 export default function RootLayout({

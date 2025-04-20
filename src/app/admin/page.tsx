@@ -16,6 +16,12 @@ export default function AdminPage() {
   const [floor, setFloor] = useState("");
   const [area, setArea] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [storeName, setStoreName] = useState("");
+
+  useEffect(() => {
+    const name = localStorage.getItem("store_name");
+    if (name) setStoreName(name);
+  }, []);
 
   // 不正アクセス防止（未ログイン状態で/adminにアクセスしたら/loginにリダイレクト）
   useEffect(() => {
@@ -51,9 +57,7 @@ export default function AdminPage() {
         <div className="text-sm mb-4">管理者メニュー＞メニュー一覧</div>
 
         <div className="bg-white p-4 mb-4 w-full text-center">
-          <h2 className="text-lg font-semibold">
-            店舗：{typeof window !== "undefined" ? localStorage.getItem("store_name") : ""}
-          </h2>
+          <h2 className="text-lg font-semibold">店舗：{storeName}</h2>
           <div className="mt-2">
             <input
               type="text"

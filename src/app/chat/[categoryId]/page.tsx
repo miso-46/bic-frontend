@@ -5,11 +5,12 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Link from 'next/link';
 import { FaSpinner } from 'react-icons/fa';
-import { Luckiest_Guy } from 'next/font/google';
+import { M_PLUS_Rounded_1c } from 'next/font/google';
+import styles from '@/app/components/ButtonGroup.module.css';
 import Image from 'next/image';
 import { openDB } from 'idb';
 
-const luckiestGuy = Luckiest_Guy({ weight: '400', subsets: ['latin'] });
+const mplusRounded = M_PLUS_Rounded_1c({ weight: '700', subsets: ['latin'] });
 
 // 環境変数の読み取り（
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -155,36 +156,28 @@ export default function ChatPage() {
 
     return (
         <main className="flex flex-col items-center justify-center p-4">
-        <h1 className={`text-2xl font-bold ${luckiestGuy.className}`}>QUESTION</h1>
-        <div className="flex gap-8 mt-6">
-            {/* 左側キャラクター */}
-            <div>
-            <Image
-            src={characterImage || "/images/girl.png"}
-            alt="案内キャラクター"
-            width={200}
-            height={200} // 高さは適宜調整
-            priority
-            />
-            <div className="bg-[#FFBEBE] p-4 mt-2 rounded-md font-bold text-black">
-                あなたにおススメの<br />
-                {categoryName ? `【${categoryName}】` : '【カテゴリー】'}<br />
-                を診断するよー！<br />
-                いくつか質問するから、<br />
-                当てはまる答えを選んでね！
-            </div>
-            <Link
-                href="/"
-                className="mt-4 border border-[#FF0000] text-[#FF0000] px-4 py-2 rounded-full hover:bg-pink-50 inline-block text-center"
-            >
-                トップに戻る
-            </Link>
+        <h1 className={`text-3xl font-bold ${mplusRounded.className}`}>QUESTION</h1>
+        <div className="flex flex-col md:flex-row gap-8 mt-6 items-start justify-center w-full max-w-6xl mx-auto">
+            <div className="flex flex-col items-center justify-center h-full">
+                <Image
+                src={characterImage || "/images/girl.png"}
+                alt="案内キャラクター"
+                width={200}
+                height={200} // 高さは適宜調整
+                priority
+                />
+                <div className="mt-4 bg-[#FFE8E8] p-4 rounded-md text-black">
+                    あなたにおススメの<br />
+                    {categoryName ? `【${categoryName}】` : '【カテゴリー】'}<br />
+                    を診断するよー！<br />
+                    いくつか質問するから、<br />
+                    当てはまる答えを選んでね！
+                </div>
             </div>
 
-            {/* 右側質問エリア */}
             <div
             ref={chatRef}
-            className="bg-[#FFE8E8] p-6 rounded-md w-[500px] overflow-y-auto max-h-[600px] transition-all"
+            className="bg-[#FFE8E8] p-6 rounded-md w-full md:w-1/2 overflow-y-auto h-[600px] transition-all"
             >
             <div className="mb-4 bg-[#FFBEBE] p-2 rounded font-bold text-black">最初に、あなたのことを教えてね！</div>
 
@@ -199,7 +192,7 @@ export default function ChatPage() {
                         setAge(opt);
                         if (currentStep === 1) setTimeout(() => setCurrentStep(2), 800);
                         }}
-                        className={`px-4 py-2 border rounded shadow text-black ${age == opt ? 'bg-gray-300' : 'bg-white hover:bg-gray-100'}`}
+                        className={`px-4 py-2 border rounded shadow text-black ${age == opt ? 'bg-gray-200' : 'bg-white hover:bg-gray-100'}`}
                     >
                         {opt}代
                     </button>
@@ -223,7 +216,7 @@ export default function ChatPage() {
                         setGender(opt.value);
                         if (currentStep === 2) setTimeout(() => setCurrentStep(3), 800);
                         }}
-                        className={`px-4 py-2 border rounded shadow text-black ${gender == opt.value ? 'bg-gray-300' : 'bg-white hover:bg-gray-100'}`}
+                        className={`px-4 py-2 border rounded shadow text-black ${gender == opt.value ? 'bg-gray-200' : 'bg-white hover:bg-gray-100'}`}
                     >
                         {opt.label}
                     </button>
@@ -243,7 +236,7 @@ export default function ChatPage() {
                         setHousehold(String(opt));
                         if (currentStep === 3) setTimeout(() => setCurrentStep(4), 800);
                         }}
-                        className={`px-4 py-2 border rounded shadow text-black ${household == String(opt) ? 'bg-gray-300' : 'bg-white hover:bg-gray-100'}`}
+                        className={`px-4 py-2 border rounded shadow text-black ${household == String(opt) ? 'bg-gray-200' : 'bg-white hover:bg-gray-100'}`}
                     >
                         {opt}人
                     </button>
@@ -269,7 +262,7 @@ export default function ChatPage() {
                                   key={option.value}
                                   onClick={() => handleChoice(id, option.value)}
                                   className={`px-4 py-2 border rounded shadow text-black ${
-                                    isSelected ? 'bg-gray-300' : 'bg-white hover:bg-gray-100'
+                                    isSelected ? 'bg-gray-200' : 'bg-white hover:bg-gray-100'
                                   }`}
                                 >
                                   {option.label}
@@ -284,13 +277,17 @@ export default function ChatPage() {
 
             </div>
         </div>
-        <div className="mt-6 flex flex-col items-center w-full">
+        <div className="mt-6 flex flex-col md:flex-row justify-center gap-4 items-center w-full">
+            <Link
+            href="/"
+            className={`${styles.btnCommon} ${styles.btnReturn}`}
+            >
+            トップに戻る
+            </Link>
             <button
             disabled={!allAnswered}
             onClick={handleSubmit}
-            className={`px-8 py-2 rounded-full text-white font-bold ${luckiestGuy.className} ${
-                allAnswered ? 'bg-red-500' : 'bg-gray-300'
-            }`}
+            className={`${styles.btnCommon} ${styles.btnDiagnose} ${!allAnswered ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
             CHECK!
             </button>

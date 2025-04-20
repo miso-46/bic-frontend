@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from "next/image";
@@ -6,6 +5,12 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { openDB } from "idb";
+import { M_PLUS_Rounded_1c } from "next/font/google";
+
+const mplusRounded = M_PLUS_Rounded_1c({
+  weight: "700",
+  subsets: ["latin"],
+});
 
 const getMediaDB = async () => {
   return await openDB("bicAppDB", 1, {
@@ -21,7 +26,8 @@ export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // for hamburger
+  const [isApplianceDropdownOpen, setIsApplianceDropdownOpen] = useState(false); // for appliance
   const [selectedAppliance, setSelectedAppliance] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [videoError, setVideoError] = useState(false);
@@ -208,7 +214,7 @@ export default function Home() {
 
   const handleApplianceSelect = (appliance: string) => {
     setSelectedAppliance(appliance);
-    setIsDropdownOpen(false);
+    setIsApplianceDropdownOpen(false);
   };
 
   const handleGoButtonClick = () => {
@@ -250,12 +256,45 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-auto">
+      <div className="flex items-center justify-between">
+        <div className="relative">
+          <button
+            className="p-2 focus:outline-none"
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+          >
+            <svg
+              className="w-8 h-8 text-gray-500"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          {isMenuOpen && (
+            <div
+              className="absolute left-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-10"
+              onMouseLeave={() => setIsMenuOpen(false)}
+            >
+              <button
+                onClick={handleAdminButtonClick}
+                className="block px-4 py-2 text-left w-full text-gray-700 hover:bg-gray-100"
+              >
+                管理者メニュー
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
       <main className="flex flex-col md:flex-row gap-4 flex-grow">
         {/* 左側のキャラクター部分 */}
         <div className="w-full md:w-1/2 p-4 relative">
-          <div className="bg-pink-200 rounded-3xl p-3 mb-4 max-w-[600px] relative">
-            <div className="absolute -bottom-2 left-6 w-4 h-4 bg-pink-200 rotate-45"></div>
-            <p className="text-lg transition-opacity duration-300">{message}</p>
+          <div className="flex justify-center">
+            <div className="bg-[#FFE8E8] rounded-2xl p-3 mb-4 max-w-[400px] relative text-center">
+              <div className="absolute -bottom-2 left-6 w-4 h-4 bg-[#FFE8E8] rotate-45"></div>
+              <p className="text-md transition-opacity duration-300">{message}</p>
+            </div>
           </div>
 
           <div className="relative flex justify-center">
@@ -271,7 +310,7 @@ export default function Home() {
               fallbackVideo ? (
                 <video
                   ref={videoRef}
-                  className={`w-[300px] h-[500px] object-contain ${talking ? "talking" : ""}`}
+                  className={`w-[300px] h-[500px] md:h-[500px] sm:h-[400px] h-[300px] object-contain ${talking ? "talking" : ""}`}
                   muted
                   loop
                   playsInline
@@ -284,7 +323,7 @@ export default function Home() {
                 <video
                   ref={videoRef}
                   src={videoSrc}
-                  className={`w-[300px] h-[500px] object-contain ${talking ? "talking" : ""}`}
+                  className={`w-[300px] h-[500px] md:h-[500px] sm:h-[400px] h-[300px] object-contain ${talking ? "talking" : ""}`}
                   muted
                   loop
                   playsInline
@@ -311,7 +350,7 @@ export default function Home() {
           <div className="p-4 flex justify-center">
             <Image
               src="/images/title.png"
-              alt="ビッカメ娘ロゴ"
+              alt="アプリ名ロゴ"
               width={300}
               height={80}
               className="object-contain"
@@ -319,7 +358,7 @@ export default function Home() {
           </div>
 
           <div className="p-4">
-            <h2 className="text-[42px] font-bold text-center">
+            <h2 className={`text-[42px] md:text-[42px] sm:text-[32px] text-[24px] font-bold text-center ${mplusRounded.className}`}>
               おススメ家電診断
             </h2>
           </div>
@@ -328,7 +367,7 @@ export default function Home() {
             <div className="relative">
               <button
                 className="w-full text-left flex justify-between items-center text-2xl font-bold py-8 px-6 border rounded-md h-32"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                onClick={() => setIsApplianceDropdownOpen(!isApplianceDropdownOpen)}
               >
                 <span className="flex-1 text-center">
                   {selectedAppliance
@@ -338,12 +377,12 @@ export default function Home() {
                 <ChevronDown
                   className="transition-transform duration-200 w-8 h-8"
                   style={{
-                    transform: isDropdownOpen ? "rotate(180deg)" : "rotate(0)",
+                    transform: isApplianceDropdownOpen ? "rotate(180deg)" : "rotate(0)",
                   }}
                 />
               </button>
 
-              {isDropdownOpen && (
+              {isApplianceDropdownOpen && (
                 <div className="absolute z-10 mt-1 w-full bg-white border rounded-md shadow-lg">
                   {Object.entries(appliances).map(([name]) => (
                     <div
@@ -358,27 +397,20 @@ export default function Home() {
               )}
             </div>
           </div>
+
+          <footer className="flex justify-center p-4">
+            <button
+              className={`bg-red-500 text-white text-2xl font-bold py-3 px-24 rounded-full ${mplusRounded.className} ${
+                !selectedAppliance ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={!selectedAppliance}
+              onClick={handleGoButtonClick}
+            >
+              GO!
+            </button>
+          </footer>
         </div>
       </main>
-
-      {/* フッター部分 */}
-      <footer className="flex justify-between items-center p-4 mt-4">
-        <button
-          className="border border-pink-500 text-pink-500 rounded-full px-6 py-2"
-          onClick={handleAdminButtonClick}
-        >
-          管理者メニューへ
-        </button>
-        <button
-          className={`bg-red-500 text-white text-2xl font-bold py-3 px-24 rounded-full mr-16 ${
-            !selectedAppliance ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          disabled={!selectedAppliance}
-          onClick={handleGoButtonClick}
-        >
-          GO!
-        </button>
-      </footer>
     </div>
   );
 }
