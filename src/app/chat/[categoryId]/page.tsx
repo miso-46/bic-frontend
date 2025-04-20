@@ -10,7 +10,7 @@ import styles from '@/app/components/ButtonGroup.module.css';
 import Image from 'next/image';
 import { openDB } from 'idb';
 
-const mplusRounded = M_PLUS_Rounded_1c({ weight: '400', subsets: ['latin'] });
+const mplusRounded = M_PLUS_Rounded_1c({ weight: '700', subsets: ['latin'] });
 
 // 環境変数の読み取り（
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -166,7 +166,7 @@ export default function ChatPage() {
                 height={200} // 高さは適宜調整
                 priority
                 />
-                <div className="mt-4 bg-[#FFBEBE] p-4 rounded-md font-bold text-black">
+                <div className="mt-4 bg-[#FFE8E8] p-4 rounded-md text-black">
                     あなたにおススメの<br />
                     {categoryName ? `【${categoryName}】` : '【カテゴリー】'}<br />
                     を診断するよー！<br />
@@ -192,7 +192,7 @@ export default function ChatPage() {
                         setAge(opt);
                         if (currentStep === 1) setTimeout(() => setCurrentStep(2), 800);
                         }}
-                        className={`px-4 py-2 border rounded shadow text-black ${age == opt ? 'bg-gray-300' : 'bg-white hover:bg-gray-100'}`}
+                        className={`px-4 py-2 border rounded shadow text-black ${age == opt ? 'bg-gray-200' : 'bg-white hover:bg-gray-100'}`}
                     >
                         {opt}代
                     </button>
@@ -216,7 +216,7 @@ export default function ChatPage() {
                         setGender(opt.value);
                         if (currentStep === 2) setTimeout(() => setCurrentStep(3), 800);
                         }}
-                        className={`px-4 py-2 border rounded shadow text-black ${gender == opt.value ? 'bg-gray-300' : 'bg-white hover:bg-gray-100'}`}
+                        className={`px-4 py-2 border rounded shadow text-black ${gender == opt.value ? 'bg-gray-200' : 'bg-white hover:bg-gray-100'}`}
                     >
                         {opt.label}
                     </button>
@@ -236,7 +236,7 @@ export default function ChatPage() {
                         setHousehold(String(opt));
                         if (currentStep === 3) setTimeout(() => setCurrentStep(4), 800);
                         }}
-                        className={`px-4 py-2 border rounded shadow text-black ${household == String(opt) ? 'bg-gray-300' : 'bg-white hover:bg-gray-100'}`}
+                        className={`px-4 py-2 border rounded shadow text-black ${household == String(opt) ? 'bg-gray-200' : 'bg-white hover:bg-gray-100'}`}
                     >
                         {opt}人
                     </button>
@@ -262,7 +262,7 @@ export default function ChatPage() {
                                   key={option.value}
                                   onClick={() => handleChoice(id, option.value)}
                                   className={`px-4 py-2 border rounded shadow text-black ${
-                                    isSelected ? 'bg-gray-300' : 'bg-white hover:bg-gray-100'
+                                    isSelected ? 'bg-gray-200' : 'bg-white hover:bg-gray-100'
                                   }`}
                                 >
                                   {option.label}

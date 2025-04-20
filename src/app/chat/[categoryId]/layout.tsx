@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './ChatLayout.module.css';
 
 export default function ChatLayout({
   children,
@@ -6,7 +7,7 @@ export default function ChatLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div style={{ backgroundColor: 'white', color: 'black', minHeight: '100vh' }}>
+    <div className={styles.container}>
       {children}
     </div>
   );
