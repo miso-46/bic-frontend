@@ -369,7 +369,7 @@ export default function Home() {
                 className="w-full text-left flex justify-between items-center text-2xl font-bold py-8 px-6 border rounded-md h-32"
                 onClick={() => setIsApplianceDropdownOpen(!isApplianceDropdownOpen)}
               >
-                <span className={`flex-1 text-center ${mplusRounded.className}`}>
+                <span className="flex-1 text-center">
                   {selectedAppliance
                     ? `【${selectedAppliance}】`
                     : "【家電を選ぶ】"}
@@ -400,7 +400,7 @@ export default function Home() {
 
           <footer className="flex justify-center p-4">
             <button
-              className={`bg-red-500 text-white text-2xl font-bold py-3 px-24 rounded-full ${
+              className={`bg-red-500 text-white text-2xl font-bold py-3 px-24 rounded-full ${mplusRounded.className} ${
                 !selectedAppliance ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={!selectedAppliance}
