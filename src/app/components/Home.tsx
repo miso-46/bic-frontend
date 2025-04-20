@@ -90,7 +90,7 @@ export default function Home() {
 
   useEffect(() => {
     const initialize = async () => {
-      let storeId = searchParams.get("store_id") || (typeof window !== "undefined" && localStorage.getItem("store_id"));
+      const storeId = searchParams.get("store_id") || (typeof window !== "undefined" && localStorage.getItem("store_id"));
  
       if (!storeId) {
         setStoreAvailable(false);
