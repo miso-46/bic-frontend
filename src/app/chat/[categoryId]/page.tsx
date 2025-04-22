@@ -35,6 +35,7 @@ export default function ChatPage() {
     const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [characterImage, setCharacterImage] = useState<string | null>(null);
+    const [videoSrc, setVideoSrc] = useState<string | null>(null);
 
     const allAnswered =
     gender &&
@@ -74,6 +75,22 @@ export default function ChatPage() {
         };
         loadCharacterImage();
     }, []);
+
+    useEffect(() => {
+        const loadVideo = async () => {
+          try {
+            const db = await openDB("bicAppDB", 1);
+            const blob = await db.get("media", "video");
+            if (blob && blob.size > 0) {
+              const url = URL.createObjectURL(blob);
+              setVideoSrc(url);
+            }
+          } catch (e) {
+            console.error("動画の取得に失敗しました", e);
+          }
+        };
+        loadVideo();
+      }, []);
 
     useEffect(() => {
         setTimeout(() => {
@@ -294,9 +311,20 @@ export default function ChatPage() {
             {errorMessage && <p className="mt-2 text-red-600">{errorMessage}</p>}
         </div>
         {isSubmitting && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-            <FaSpinner className="animate-spin text-white text-4xl" />
-            </div>
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          {/* 白丸の背景 */}
+          <div className="w-[500px] h-[500px] bg-white rounded-full flex flex-col items-center justify-center shadow-xl">
+            <video
+              src={videoSrc || "/images/bic-girl.mp4"}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-[160px] h-auto mb-2"
+            />
+            <p className={`${mplusRounded.className} text-black text-xl`}>調べてるよー</p>
+          </div>
+        </div>
         )}
         </main>
     );
