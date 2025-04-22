@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Link from 'next/link';
-import { FaSpinner } from 'react-icons/fa';
 import { M_PLUS_Rounded_1c } from 'next/font/google';
 import styles from '@/app/components/ButtonGroup.module.css';
 import Image from 'next/image';

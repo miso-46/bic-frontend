@@ -6,7 +6,6 @@ import { useParams, useRouter } from 'next/navigation';
 import styles from "./priority.module.css";
 import axios from 'axios';
 import { openDB } from 'idb';
-import { FaSpinner } from 'react-icons/fa';
 import { M_PLUS_Rounded_1c } from 'next/font/google';
 
 const mplusRounded = M_PLUS_Rounded_1c({
