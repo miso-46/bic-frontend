@@ -76,7 +76,6 @@ export const PriorityCard = ({ speechText = "あなたの優先順位はこれ�
       </section>
 
       <section className={styles.rankingSection}>
-        <h2>優先順位</h2>
         {scores.length === 0 ? (
           <p className={styles.loading}>読み込み中...</p>
         ) : (

@@ -9,6 +9,7 @@ import { M_PLUS_Rounded_1c } from 'next/font/google';
 import styles from '@/app/components/ButtonGroup.module.css';
 import Image from 'next/image';
 import { openDB } from 'idb';
+import layoutStyles from './ChatLayout.module.css';
 
 const mplusRounded = M_PLUS_Rounded_1c({ weight: '700', subsets: ['latin'] });
 
@@ -155,149 +156,123 @@ export default function ChatPage() {
     };
 
     return (
-        <main className="flex flex-col items-center justify-center p-4">
-        <h1 className={`text-3xl font-bold ${mplusRounded.className}`}>QUESTION</h1>
-        <div className="flex flex-col md:flex-row gap-8 mt-6 items-start justify-center w-full max-w-6xl mx-auto">
-            <div className="flex flex-col items-center justify-center h-full">
-                <Image
+        <main>
+          <h1 className={`text-3xl font-bold ${mplusRounded.className} text-center w-full`}>QUESTION</h1>
+          <div className={layoutStyles.container}>
+            <div className={layoutStyles.left}>
+              <Image
                 src={characterImage || "/images/girl.png"}
                 alt="案内キャラクター"
                 width={200}
-                height={200} // 高さは適宜調整
+                height={200}
                 priority
-                />
-                <div className="mt-4 bg-[#FFE8E8] p-4 rounded-md text-black">
-                    あなたにおススメの<br />
-                    {categoryName ? `【${categoryName}】` : '【カテゴリー】'}<br />
-                    を診断するよー！<br />
-                    いくつか質問するから、<br />
-                    当てはまる答えを選んでね！
-                </div>
+                className={layoutStyles.character}
+              />
+              <div className={layoutStyles.speech}>
+                あなたにおススメの<br />
+                {categoryName ? `【${categoryName}】` : '【カテゴリー】'}<br />
+                を診断するよー！<br />
+                いくつか質問するから、<br />
+                当てはまる答えを選んでね！
+              </div>
             </div>
+            <div className={layoutStyles.right}>
+              <div ref={chatRef} className={layoutStyles.chatBox}>
+                <div className={layoutStyles.chatHeader}>最初に、あなたのことを教えてね！</div>
 
-            <div
-            ref={chatRef}
-            className="bg-[#FFE8E8] p-6 rounded-md w-full md:w-1/2 overflow-y-auto h-[600px] transition-all"
-            >
-            <div className="mb-4 bg-[#FFBEBE] p-2 rounded font-bold text-black">最初に、あなたのことを教えてね！</div>
-
-            {currentStep >= 1 && (
-                <div className="mb-2">
-                <div className="bg-[#FFBEBE] px-2 py-1 inline-block rounded font-bold text-black">年齢は？</div>
-                <div className="mt-2 flex gap-4 flex-wrap">
-                    {[10, 20, 30, 40, 50, 60, 70].map(opt => (
-                    <button
-                        key={opt}
-                        onClick={() => {
-                        setAge(opt);
-                        if (currentStep === 1) setTimeout(() => setCurrentStep(2), 800);
-                        }}
-                        className={`px-4 py-2 border rounded shadow text-black ${age == opt ? 'bg-gray-200' : 'bg-white hover:bg-gray-100'}`}
-                    >
-                        {opt}代
-                    </button>
-                    ))}
-                </div>
-                </div>
-            )}
-
-            {currentStep >= 2 && (
-                <div className="mb-4">
-                <div className="bg-[#FFBEBE] px-2 py-1 inline-block rounded font-bold text-black">性別は？</div>
-                <div className="mt-2 flex gap-4 flex-wrap">
-                    {[
-                    { label: '男性', value: 'male' },
-                    { label: '女性', value: 'female' },
-                    { label: 'その他', value: 'other' }
-                    ].map(opt => (
-                    <button
-                        key={opt.value}
-                        onClick={() => {
-                        setGender(opt.value);
-                        if (currentStep === 2) setTimeout(() => setCurrentStep(3), 800);
-                        }}
-                        className={`px-4 py-2 border rounded shadow text-black ${gender == opt.value ? 'bg-gray-200' : 'bg-white hover:bg-gray-100'}`}
-                    >
-                        {opt.label}
-                    </button>
-                    ))}
-                </div>
-                </div>
-            )}
-
-            {currentStep >= 3 && (
-                <div className="mb-4">
-                <div className="bg-[#FFBEBE] px-2 py-1 inline-block rounded font-bold text-black">世帯人数は？</div>
-                <div className="mt-2 flex gap-4 flex-wrap">
-                    {[1, 2, 3, 4, 5].map(opt => (
-                    <button
-                        key={opt}
-                        onClick={() => {
-                        setHousehold(String(opt));
-                        if (currentStep === 3) setTimeout(() => setCurrentStep(4), 800);
-                        }}
-                        className={`px-4 py-2 border rounded shadow text-black ${household == String(opt) ? 'bg-gray-200' : 'bg-white hover:bg-gray-100'}`}
-                    >
-                        {opt}人
-                    </button>
-                    ))}
-                </div>
-                </div>
-            )}
-
-            {Object.entries(questions).map(([id, q], index) => {
-                const stepIndex = index + 4;
-
-                return (
-                    currentStep >= stepIndex && (
-                    <div key={id} className="mb-4">
-                        <div className="bg-[#FFBEBE] px-2 py-1 inline-block rounded font-bold text-black">
-                        {q.question_text}
-                        </div>
-                        <div className="mt-2 flex gap-4 flex-wrap">
-                        {q.options.map((option: { label: string; value: number }) => {
-                              const isSelected = answers[id] === option.value;
-                              return (
-                                <button
-                                  key={option.value}
-                                  onClick={() => handleChoice(id, option.value)}
-                                  className={`px-4 py-2 border rounded shadow text-black ${
-                                    isSelected ? 'bg-gray-200' : 'bg-white hover:bg-gray-100'
-                                  }`}
-                                >
-                                  {option.label}
-                                </button>
-                              );
-                        })}
-                        </div>
+                {currentStep >= 1 && (
+                  <div>
+                    <div className={layoutStyles.questionLabel}>年齢は？</div>
+                    <div className={layoutStyles.options}>
+                      {[10, 20, 30, 40, 50, 60, 70].map(opt => (
+                        <button
+                          key={opt}
+                          onClick={() => { setAge(opt); if (currentStep === 1) setTimeout(() => setCurrentStep(2), 800); }}
+                          className={`${layoutStyles.optionButton} ${age === opt ? layoutStyles.selectedOption : ''}`}
+                        >
+                          {opt}代
+                        </button>
+                      ))}
                     </div>
-                    )
-                );
-            })}
+                  </div>
+                )}
 
+                {currentStep >= 2 && (
+                  <div>
+                    <div className={layoutStyles.questionLabel}>性別は？</div>
+                    <div className={layoutStyles.options}>
+                      {[
+                        { label: '男性', value: 'male' },
+                        { label: '女性', value: 'female' },
+                        { label: 'その他', value: 'other' }
+                      ].map(opt => (
+                        <button
+                          key={opt.value}
+                          onClick={() => { setGender(opt.value); if (currentStep === 2) setTimeout(() => setCurrentStep(3), 800); }}
+                          className={`${layoutStyles.optionButton} ${gender === opt.value ? layoutStyles.selectedOption : ''}`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {currentStep >= 3 && (
+                  <div>
+                    <div className={layoutStyles.questionLabel}>世帯人数は？</div>
+                    <div className={layoutStyles.options}>
+                      {[1, 2, 3, 4, 5].map(opt => (
+                        <button
+                          key={opt}
+                          onClick={() => { setHousehold(String(opt)); if (currentStep === 3) setTimeout(() => setCurrentStep(4), 800); }}
+                          className={`${layoutStyles.optionButton} ${household === String(opt) ? layoutStyles.selectedOption : ''}`}
+                        >
+                          {opt}人
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {Object.entries(questions).map(([id, q], idx) => (
+                  currentStep >= idx + 4 && (
+                    <div key={id}>
+                      <div className={layoutStyles.questionLabel}>{q.question_text}</div>
+                      <div className={layoutStyles.options}>
+                        {q.options.map((option: { label: string; value: number }) => {
+                          const isSelected = answers[id] === option.value;
+                          return (
+                            <button
+                              key={option.value}
+                              onClick={() => handleChoice(id, option.value)}
+                              className={`${layoutStyles.optionButton} ${isSelected ? layoutStyles.selectedOption : ''}`}
+                            >
+                              {option.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )
+                ))}
+              </div>
             </div>
-        </div>
-        <div className="mt-6 flex flex-col md:flex-row justify-center gap-4 items-center w-full">
-            <Link
-            href="/"
-            className={`${styles.btnCommon} ${styles.btnReturn}`}
-            >
-            トップに戻る
-            </Link>
+          </div>
+          <div className={layoutStyles.footer}>
+            <Link href="/" className={`${styles.btnCommon} ${styles.btnReturn}`}>トップに戻る</Link>
             <button
-            disabled={!allAnswered}
-            onClick={handleSubmit}
-            className={`${styles.btnCommon} ${styles.btnDiagnose} ${!allAnswered ? 'opacity-50 cursor-not-allowed' : ''}`}
-            >
-            CHECK!
-            </button>
-            {errorMessage && <p className="mt-2 text-red-600">{errorMessage}</p>}
-        </div>
-        {isSubmitting && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-            <FaSpinner className="animate-spin text-white text-4xl" />
-            </div>
-        )}
+              disabled={!allAnswered}
+              onClick={handleSubmit}
+              className={`${styles.btnCommon} ${styles.btnDiagnose} ${!allAnswered ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >CHECK！</button>
+            {errorMessage && <p className="text-red-600">{errorMessage}</p>}
+            {isSubmitting && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                <FaSpinner className="animate-spin text-white text-4xl" />
+              </div>
+            )}
+          </div>
         </main>
     );
 }
