@@ -64,7 +64,8 @@
   padding: 16px;
   overflow-y: auto;
   height: 90%;
-  width: 100%;
+  width: 500px;
+  max-width: 100%;
   box-sizing: border-box;
   position: relative;
   z-index: 3;
@@ -162,7 +163,7 @@
     left: 0px;
     transform: none;
     z-index: 2;
-    max-width: 200px;
+    max-width: 180px;
     margin: 1px auto;
   }
 
@@ -172,6 +173,6 @@
     width: 100%;
     height: 45vh;
     position: relative;
-    top: -150px;
+    top: -80px;
   }
 }
