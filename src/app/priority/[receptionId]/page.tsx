@@ -53,7 +53,26 @@ export default function PriorityPage() {
         }
     };
     loadCharacterImage();
-}, []);
+  }, []);
+
+  // 動画の取得
+  const [videoSrc, setVideoSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadCharacterVideo = async () => {
+      try {
+        const db = await openDB("bicAppDB", 1);
+        const blob = await db.get("media", "video");
+        if (blob && blob.size > 0) {
+          const url = URL.createObjectURL(blob);
+          setVideoSrc(url);
+        }
+      } catch (e) {
+        console.error("動画の取得に失敗しました", e);
+      }
+    };
+    loadCharacterVideo();
+  }, []);
 
   useEffect(() => {
     const fetchAndSend = async () => {
@@ -198,7 +217,17 @@ export default function PriorityPage() {
       </footer>
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-          <FaSpinner className="animate-spin text-white text-4xl" />
+          <div className="w-[500px] h-[500px] bg-white rounded-full flex flex-col items-center justify-center shadow-xl">
+            <video
+              src={videoSrc || "/images/bic-girl.mp4"}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-[160px] h-auto mb-2"
+            />
+            <p className={`${mplusRounded.className} text-black text-xl`}>調べてるよー</p>
+          </div>
         </div>
       )}
     </div>
