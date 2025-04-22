@@ -2,7 +2,7 @@
 
 import  ProductTabs  from '../../components/ProductTabs'
 import buttonGroupStyles from '../../components/ButtonGroup.module.css'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import axios from 'axios'
 import { M_PLUS_Rounded_1c } from 'next/font/google';

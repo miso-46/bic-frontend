@@ -151,13 +151,18 @@ export default function PriorityPage() {
   return (
     <div className={styles.container}>
       {/* ヘッダー: モバイル時にハンバーガーメニュー、デスクトップ時はテキストのみ */}
-      <header className={`flex items-center justify-between md:justify-center p-4 ${styles.header} ${mplusRounded.className}`}>
+      <header className={`flex items-center justify-between p-4 ${styles.header} ${mplusRounded.className}`}>
         <button className="md:hidden p-2 focus:outline-none" onClick={() => setIsMenuOpen(prev => !prev)}>
           <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-        <div className={`${mplusRounded.className}text-3xl font-bold text-center flex-1`}>あなたの優先順位</div>
+        <div className="flex-1 text-center">あなたの優先順位</div>
+        {isMenuOpen && (
+          <div className="absolute top-full left-4 bg-white border rounded-md shadow-lg z-50">
+            <button className="block px-4 py-2 text-left w-full text-gray-700 hover:bg-gray-100" onClick={() => router.push('/')}>トップに戻る</button>
+          </div>
+        )}
       </header>
       
       <main className={styles.main}>
