@@ -238,3 +238,13 @@
     width: 200px;
   }
 }
+
+@media screen and (max-width: 767px) {
+  /* スマホ時の上部余白調整 */
+  .container {
+    padding-top: 0;
+  }
+  .header {
+    margin: 8px 0;
+  }
+}
