@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Link from 'next/link';
-import { FaSpinner } from 'react-icons/fa';
 import { M_PLUS_Rounded_1c } from 'next/font/google';
 import styles from '@/app/components/ButtonGroup.module.css';
 import Image from 'next/image';
@@ -36,6 +35,7 @@ export default function ChatPage() {
     const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [characterImage, setCharacterImage] = useState<string | null>(null);
+    const [videoSrc, setVideoSrc] = useState<string | null>(null);
 
     const allAnswered =
     gender &&
@@ -75,6 +75,22 @@ export default function ChatPage() {
         };
         loadCharacterImage();
     }, []);
+
+    useEffect(() => {
+        const loadVideo = async () => {
+          try {
+            const db = await openDB("bicAppDB", 1);
+            const blob = await db.get("media", "video");
+            if (blob && blob.size > 0) {
+              const url = URL.createObjectURL(blob);
+              setVideoSrc(url);
+            }
+          } catch (e) {
+            console.error("動画の取得に失敗しました", e);
+          }
+        };
+        loadVideo();
+      }, []);
 
     useEffect(() => {
         setTimeout(() => {
@@ -156,6 +172,7 @@ export default function ChatPage() {
     };
 
     return (
+      <>
         <main>
           <h1 className={`text-3xl font-bold ${mplusRounded.className} text-center w-full`}>QUESTION</h1>
           <div className={layoutStyles.container}>
@@ -267,12 +284,24 @@ export default function ChatPage() {
               className={`${styles.btnCommon} ${styles.btnDiagnose} ${!allAnswered ? 'opacity-50 cursor-not-allowed' : ''}`}
             >CHECK！</button>
             {errorMessage && <p className="text-red-600">{errorMessage}</p>}
-            {isSubmitting && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-                <FaSpinner className="animate-spin text-white text-4xl" />
-              </div>
-            )}
           </div>
         </main>
+        {isSubmitting && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            {/* 白丸の背景 */}
+            <div className="w-[500px] h-[500px] bg-white rounded-full flex flex-col items-center justify-center shadow-xl">
+              <video
+                src={videoSrc || "/images/bic-girl.mp4"}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-[160px] h-auto mb-2"
+              />
+              <p className={`${mplusRounded.className} text-black text-xl`}>調べてるよー</p>
+            </div>
+          </div>
+        )}
+      </>
     );
 }
