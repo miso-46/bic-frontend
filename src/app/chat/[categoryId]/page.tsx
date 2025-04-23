@@ -215,7 +215,7 @@ export default function ChatPage() {
                   <div>
                     <div className={layoutStyles.questionLabel}>年齢は？</div>
                     <div className={layoutStyles.options}>
-                      {[10, 20, 30, 40, 50, 60, 70].map(opt => (
+                      {[10, 20, 30, 40, 50, 60].map(opt => (
                         <button
                           key={opt}
                           onClick={() => { setAge(opt); if (currentStep === 1) setTimeout(() => setCurrentStep(2), 800); }}
