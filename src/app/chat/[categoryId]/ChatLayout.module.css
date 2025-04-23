@@ -4,7 +4,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: stretch;
-  height: 100vh;
+  height: 90vh;
   width: 100%;
   max-width: 1180px;
   margin: 0 auto;
@@ -17,6 +17,7 @@
 .left,
 .right {
   flex: 1;
+  position: relative;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -27,6 +28,7 @@
 /* === キャラ画像 === */
 .character {
   width: 200px;
+  position: relative;
   z-index: 1;
 }
 
@@ -36,9 +38,11 @@
   border-radius: 10px;
   padding: 10px;
   font-size: 16px;
-  max-width: 260px;
+  width: 100%;
+  max-width: 90%;
   text-align: center;
   position: relative;
+  top:-60px;
   margin-bottom: 8px;
   z-index: 2;
 }
@@ -60,8 +64,62 @@
   padding: 16px;
   overflow-y: auto;
   height: 90%;
-  width: 90%;
+  width: 500px;
+  max-width: 100%;
   box-sizing: border-box;
+  position: relative;
+  z-index: 3;
+}
+
+/* チャット内ヘッダー */
+.chatHeader {
+  background: #ffbebe;
+  padding: 8px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* 質問ラベル */
+.questionLabel {
+  background: #ffbebe;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #000;
+  display: inline-block;
+  margin: 8px 0px 8px 0px;
+  font-size: 14px;
+}
+
+/* オプション一覧 */
+.options {
+  margin-top: 8px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+/* オプションボタン */
+.optionButton {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  color: #000;
+  background: #fff;
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+}
+
+/* 選択済みオプション */
+.selectedOption {
+  background: #e5e5e5;
+  font-size: 14px;
 }
 
 /* === ボタンフッター === */
@@ -80,35 +138,41 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    padding-top: 80px;
+    padding-top: 0;
   }
 
   .left {
     position: relative;
     width: 100%;
+    z-index: -2;
   }
 
   .character {
     position: absolute;
-    top: 140px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 240px;
+    top: 10%;
+    left: 40%;
+    transform: none;
+    width: 200px;
+    margin: 1px auto 0;
   }
 
   .speech {
     position: absolute;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%);
+    font-size: 12px;
+    top: 10px;
+    left: 0px;
+    transform: none;
     z-index: 2;
-    max-width: 300px;
+    max-width: 180px;
+    margin: 1px auto;
   }
 
   .chatBox {
     background-color: rgba(255, 240, 240, 0.8);
-    margin-top: 360px;
-    width: 90%;
-    height: 60vh;
+    margin-top: 10px;
+    width: 100%;
+    height: 45vh;
+    position: relative;
+    top: -80px;
   }
 }

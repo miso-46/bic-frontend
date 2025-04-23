@@ -37,6 +37,7 @@ export default function PriorityPage() {
   const [priorities, setPriorities] = useState<Priority[]>([]);
   const [characterImage, setCharacterImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const loadCharacterImage = async () => {
@@ -149,10 +150,21 @@ export default function PriorityPage() {
 
   return (
     <div className={styles.container}>
-      <header className={`${styles.header} ${mplusRounded.className}`}>
-        あなたの優先順位
+      {/* ヘッダー: モバイル時にハンバーガーメニュー、デスクトップ時はテキストのみ */}
+      <header className={`flex items-center justify-between p-4 ${styles.header} ${mplusRounded.className}`}>
+        <button className="md:hidden p-2 focus:outline-none" onClick={() => setIsMenuOpen(prev => !prev)}>
+          <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <div className="flex-1 text-center">あなたの優先順位</div>
+        {isMenuOpen && (
+          <div className="absolute top-full left-4 bg-white border rounded-md shadow-lg z-50">
+            <button className="block px-4 py-2 text-left w-full text-gray-700 hover:bg-gray-100" onClick={() => router.push('/')}>トップに戻る</button>
+          </div>
+        )}
       </header>
-
+      
       <main className={styles.main}>
         <section className={styles.characterSection}>
           <Image
@@ -170,7 +182,6 @@ export default function PriorityPage() {
         </section>
 
         <section className={styles.rankingSection}>
-          <h2>優先順位</h2>
           {priorities.length === 0 ? (
             <p className={styles.loading}>読み込み中...</p>
           ) : (
