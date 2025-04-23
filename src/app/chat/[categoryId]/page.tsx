@@ -36,6 +36,7 @@ export default function ChatPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [characterImage, setCharacterImage] = useState<string | null>(null);
     const [videoSrc, setVideoSrc] = useState<string | null>(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const allAnswered =
     gender &&
@@ -173,8 +174,21 @@ export default function ChatPage() {
 
     return (
       <>
-        <main>
-          <h1 className={`text-3xl font-bold ${mplusRounded.className} text-center w-full`}>QUESTION</h1>
+        {/* ハンバーガーメニュー付きヘッダー */}
+        <header className="fixed top-0 left-0 w-full px-4 py-2 flex items-center justify-between z-50">
+          <button className="md:hidden p-2 focus:outline-none" onClick={() => setIsMenuOpen(prev => !prev)}>
+            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <h1 className={`${mplusRounded.className} text-3xl font-bold text-center flex-1`}>QUESTION</h1>
+          {isMenuOpen && (
+            <div className="absolute top-full left-4 bg-white border rounded-md shadow-lg z-50">
+              <button className="block px-4 py-2 text-left w-full text-gray-700 hover:bg-gray-100" onClick={() => router.push('/')}>トップに戻る</button>
+            </div>
+          )}
+        </header>
+        <main className="pt-16">
           <div className={layoutStyles.container}>
             <div className={layoutStyles.left}>
               <Image

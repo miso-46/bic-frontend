@@ -130,7 +130,7 @@ export const RadarChart = ({
         position: 'relative',
         width: '100%',
         height: isMobile ? '250px' : '400px', // モバイル時は高さを圧縮
-        padding: '20px',
+        padding: isMobile ? '0px' : '20px',
       }}
     >
       <Radar
@@ -139,7 +139,7 @@ export const RadarChart = ({
           ...options,
           responsive: true,
           maintainAspectRatio: false,
-          layout: { padding: 20 },
+          layout: { padding: isMobile ? 0 : 20 },
         }}
       />
     </div>
