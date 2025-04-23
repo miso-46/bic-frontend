@@ -2,8 +2,8 @@
 import type React from "react";
 
 export const metadata = {
-  title: 'My App',
-  description: 'App description here',
+  title: "AIビッカメ娘 - おススメ家電診断",
+  description: "家電選びをサポートするAI診断アプリ",
 };
 
 export default function RecommendLayout({
