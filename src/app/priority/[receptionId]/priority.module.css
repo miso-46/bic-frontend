@@ -126,9 +126,10 @@
 
 /* === フッター（もしあれば） === */
 .footer {
+  position: static;
   text-align: center;
   padding: 10px;
-  /* フッターも固定 */
+  margin-top: 16px;
   flex: 0 0 auto;
 }
 
@@ -240,11 +241,17 @@
 }
 
 @media screen and (max-width: 767px) {
-  /* スマホ時の上部余白調整 */
+  /* 既存のスマホ時スタイル */
   .container {
     padding-top: 0;
   }
   .header {
     margin: 8px 0;
+  }
+  /* メインのスクロールを抑止 */
+  .main {
+    flex: none;
+    overflow-y: visible;
+    height: auto;
   }
 }
