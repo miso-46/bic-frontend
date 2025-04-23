@@ -58,7 +58,7 @@ export default function AdminPage() {
 
         <div className="bg-white p-4 mb-4 w-full text-center">
           <h2 className="text-lg font-semibold">店舗：{storeName}</h2>
-          <div className="mt-2">
+          <div className="mt-2 flex items-center justify-center">
             <input
               type="text"
               placeholder="階数（例：1F）"
