@@ -46,7 +46,7 @@ export const ProductCard = ({
             alt={product.name}
             width={165}
             height={165}
-            style={{ objectFit: 'contain', marginBottom: '8px' }}
+            className="object-contain mb-2 mx-auto"
           />
         )}
         <h2>{product.name}</h2>

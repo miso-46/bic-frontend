@@ -270,21 +270,22 @@ export default function Home() {
 
   const appliances: { [key: string]: number } = {
     "ロボット掃除機": 1000,
-    "ドライヤー": 1000,
-    "テレビ": 1000,
+    "ドライヤー（※開発中）": 1000,
+    "テレビ（※開発中）": 1000,
   };
   const bic_girl = "/images/girl.png";
 
   return (
     <div className="flex flex-col h-auto">
-      <div className="flex items-center justify-between">
+      {/* ヘッダー */}
+      <div className="flex items-center justify-between text-white p-4">
         <div className="relative">
           <button
-            className="p-2 focus:outline-none"
+            className="p-2 focus:outline-none text-gray-700"
             onClick={() => setIsMenuOpen((prev) => !prev)}
           >
             <svg
-              className="w-8 h-8 text-gray-500"
+              className="w-8 h-8 text-gray-700"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -379,7 +380,7 @@ export default function Home() {
           </div>
 
           <div className="p-4">
-            <h2 className={`text-[42px] md:text-[42px] sm:text-[32px] text-[24px] font-bold text-center ${mplusRounded.className}`}>
+            <h2 className={`text-[35px] md:text-[42px] sm:text-[32px] text-[24px] font-bold text-center ${mplusRounded.className}`}>
               おススメ家電診断
             </h2>
           </div>
