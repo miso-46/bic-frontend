@@ -6,11 +6,13 @@ import { openDB } from "idb";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { FaSpinner } from "react-icons/fa";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 console.log('apiUrl:', apiUrl);
 
 export default function LoginPage() {
+  const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -18,8 +20,11 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setIsLoading(true);
+
     if (!name.trim() || !password.trim()) {
       alert("店舗名とパスワードを入力してください。");
+      setIsLoading(false);
       return;
     }
 
@@ -71,6 +76,7 @@ export default function LoginPage() {
 
       // 認証成功後、admin画面に遷移
       router.push("/admin");
+      setIsLoading(false);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401) {
@@ -81,6 +87,7 @@ export default function LoginPage() {
       } else {
         alert("予期しないエラーが発生しました。");
       }
+      setIsLoading(false);
     }
   };
 
@@ -144,6 +151,11 @@ export default function LoginPage() {
           店頭画面に戻る
         </button>
       </form>
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <FaSpinner className="animate-spin text-white text-4xl" />
+        </div>
+      )}
     </div>
   );
 }
